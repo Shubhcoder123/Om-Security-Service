@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ACCESS AI - AI Tools Hub</title>
+ <link rel="stylesheet" href="style.css">
+<script src="app.js"></script>
+  <style>
+    .subtitle {
+      margin: 10px 0 20px;
+      color: #555;
+      text-align: center;
+    }
+    .section-title {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-top: 30px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <div class="logo-text">ACCESS</div>
+      <div class="logo-icon">Ai</div>
+    </div>
+
+    <div class="subtitle">Discover the best AI tools in one place</div>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search tools..." />
+    </div>
+
+    <div class="tag-buttons">
+      <div class="tag">All</div>
+      <div class="tag">Text</div>
+      <div class="tag">Image</div>
+      <div class="tag">Code</div>
+      <div class="tag">Video</div>
+    </div>
+
+    <div class="section-title">Featured Tools</div>
+    <div class="tools-grid">
+      <div class="tool-card featured" data-title="GPT-3" data-tags="text">
+        <div class="tool-title">💬 CHATBOT</div>
+        <div class="tool-desc">Language model</div>
+      </div>
+      <div class="tool-card featured" data-title="Image Generator" data-tags="image">
+        <div class="tool-title">🖼️ Image Generator</div>
+        <div class="tool-desc">Generate images</div>
+      </div>
+      <div class="tool-card featured" data-title="Code Assistant" data-tags="code">
+        <div class="tool-title">💻 Code Assistant</div>
+        <div class="tool-desc">Coding help</div>
+      </div>
+      <div class="tool-card featured" data-title="Video Editor" data-tags="video">
+        <div class="tool-title">🎬 Video Editor</div>
+        <div class="tool-desc">Edit videos</div>
+      </div>
+    </div>
+
+    <div class="section-title">Popular Tools</div>
+    <div class="popular-tools" id="popularTools">
+      <div class="tool-card popular" data-title="ChatGPT" data-tags="text">
+        <div class="tool-title">🧠 ChatGPT</div>
+        <div class="tool-desc">Advanced language model by OpenAI</div>
+        <a class="use-btn" href="https://chat.openai.com/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+      </div>
+      <div class="tool-card popular" data-title="Midjourney" data-tags="image">
+        <div class="tool-title">🎨 Midjourney</div>
+        <div class="tool-desc">AI-powered image generation</div>
+        <a class="use-btn" href="https://www.midjourney.com/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+      </div>
+      <div class="tool-card popular" data-title="Jasper" data-tags="text">
+        <div class="tool-title">✍️ Jasper</div>
+        <div class="tool-desc">Content creation assistant</div>
+        <a class="use-btn" href="https://www.jasper.ai/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+      </div>
+      <div class="tool-card popular" data-title="Runway ML" data-tags="video">
+        <div class="tool-title">📸 Runway ML</div>
+        <div class="tool-desc">Video editing with AI</div>
+        <a class="use-btn" href="https://runwayml.com/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+      </div>
+      <div class="tool-card popular" data-title="Tableau AI" data-tags="code">
+        <div class="tool-title">📊 Tableau AI</div>
+        <div class="tool-desc">AI for data visualization</div>
+        <a class="use-btn" href="https://www.tableau.com/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+      </div>
+      <div class="tool-card popular" data-title="Murf AI" data-tags="audio">
+        <div class="tool-title">📢 Murf AI</div>
+        <div class="tool-desc">Text-to-speech voiceovers</div>
+        <a class="use-btn" href="https://murf.ai/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+      </div>
+      <div class="tool-card popular" data-title="Grammarly" data-tags="text">
+        <div class="tool-title">📖 Grammarly</div>
+        <div class="tool-desc">AI grammar and writing assistant</div>
+        <a class="use-btn" href="https://www.grammarly.com/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+      </div>
+      <div class="tool-card popular" data-title="Notion AI" data-tags="code">
+        <div class="tool-title">📚 Notion AI</div>
+        <div class="tool-desc">AI-powered productivity workspace</div>
+        <a class="use-btn" href="https://www.notion.so/product/ai" target="_blank" rel="noopener noreferrer">Use Tool</a>
+      </div>
+      <div class="tool-card popular" data-title="ElevenLabs" data-tags="audio">
+        <div class="tool-title">🔊 ElevenLabs</div>
+        <div class="tool-desc">Realistic voice generation</div>
+        <a class="use-btn" href="https://www.elevenlabs.io/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+      </div>
+      <div class="tool-card popular" data-title="Copy.ai" data-tags="text">
+        <div class="tool-title">📝 Copy.ai</div>
+        <div class="tool-desc">Marketing & writing content generator</div>
+        <a class="use-btn" href="https://www.copy.ai/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+      </div>
+    </div>
+
+    <div class="section-title">ALL AI TOOLS</div>
+    <div class="tools-grid all-tools">
+      <div class="tool-card all" data-title="Pictory" data-tags="video">
+        <div class="tool-title">🎞️ Pictory</div>
+        <div class="tool-desc">Turn scripts into engaging videos using AI</div>
+        <a class="use-btn" href="https://pictory.ai/" target="_blank">Use Tool</a>
+      </div>
+
+      <div class="tool-card all" data-title="Synthesia" data-tags="video">
+        <div class="tool-title">🧑‍💼 Synthesia</div>
+        <div class="tool-desc">Create AI avatars and video presentations</div>
+        <a class="use-btn" href="https://www.synthesia.io/" target="_blank">Use Tool</a>
+      </div>
+
+      <div class="tool-card all" data-title="Durable" data-tags="code">
+        <div class="tool-title">🛠️ Durable</div>
+        <div class="tool-desc">AI website builder in 30 seconds</div>
+        <a class="use-btn" href="https://durable.co/" target="_blank">Use Tool</a>
+      </div>
+
+      <div class="tool-card all" data-title="Descript" data-tags="audio,video">
+        <div class="tool-title">🎙️ Descript</div>
+        <div class="tool-desc">Audio/video editor with transcription & AI voices</div>
+        <a class="use-btn" href="https://www.descript.com/" target="_blank">Use Tool</a>
+      </div>
+
+      <div class="tool-card all" data-title="Writesonic" data-tags="text">
+        <div class="tool-title">✍️ Writesonic</div>
+        <div class="tool-desc">AI writing assistant for content & ads</div>
+        <a class="use-btn" href="https://writesonic.com/" target="_blank">Use Tool</a>
+      </div>
+
+      <div class="tool-card all" data-title="Looka" data-tags="image">
+        <div class="tool-title">🎨 Looka</div>
+        <div class="tool-desc">AI-powered logo and brand generator</div>
+        <a class="use-btn" href="https://looka.com/" target="_blank">Use Tool</a>
+      </div>
+
+      <div class="tool-card all" data-title="Kuki" data-tags="text">
+        <div class="tool-title">🤖 Kuki</div>
+        <div class="tool-desc">AI chatbot to talk and learn</div>
+        <a class="use-btn" href="https://www.kuki.ai/" target="_blank">Use Tool</a>
+      </div>
+
+      <div class="tool-card all" data-title="Cleanup.pictures" data-tags="image">
+        <div class="tool-title">🧼 Cleanup.pictures</div>
+        <div class="tool-desc">Remove unwanted objects from images</div>
+        <a class="use-btn" href="https://cleanup.pictures/" target="_blank">Use Tool</a>
+      </div>
+
+      <div class="tool-card all" data-title="Tome" data-tags="video,text">
+        <div class="tool-title">📖 Tome</div>
+        <div class="tool-desc">Create AI-powered presentations and stories</div>
+        <a class="use-btn" href="https://tome.app/" target="_blank">Use Tool</a>
+      </div>
+
+      <div class="tool-card all" data-title="Lumen5" data-tags="video">
+        <div class="tool-title">🎞️ Lumen5</div>
+        <div class="tool-desc">Turn blog posts into videos using AI</div>
+        <a class="use-btn" href="https://lumen5.com/" target="_blank">Use Tool</a>
+      </div>
+    </div>
+   <script>
+    // Animation: Rotate Popular Tools in loop
+    const popularContainer = document.getElementById("popularTools");
+    const rotateInterval = 3000;
+
+    function rotatePopularTools() {
+      const firstCard = popularContainer.firstElementChild;
+      if (firstCard) {
+        firstCard.classList.add("fade-out");
+
+        setTimeout(() => {
+          popularContainer.appendChild(firstCard); // move to end
+          firstCard.classList.remove("fade-out");
+        }, 500);
+      }
+    }
+
+    setInterval(rotatePopularTools, rotateInterval);
+  </script>
+
+  <style>
+    .fade-out {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+</body>
+</html>
