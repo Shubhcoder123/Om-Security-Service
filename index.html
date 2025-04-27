@@ -7,13 +7,22 @@
   <link rel="stylesheet" href="style.css?v=2"/>
   <style>
 <script>
+  if ('caches' in window) {
+    caches.keys().then(function(cacheNames) {
+      cacheNames.forEach(function(cacheName) {
+        caches.delete(cacheName);
+      });
+    });
+  }
   if ('serviceWorker' in navigator) {
-    caches.keys().then(function(names) {
-      for (let name of names)
-        caches.delete(name);
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
     });
   }
 </script>
+
 
     .subtitle {
       margin: 10px 0 20px;
