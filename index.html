@@ -6,6 +6,15 @@
   <title>ACCESS AI - AI Tools Hub</title>
   <link rel="stylesheet" href="style.css?v=2"/>
   <style>
+<script>
+  if ('serviceWorker' in navigator) {
+    caches.keys().then(function(names) {
+      for (let name of names)
+        caches.delete(name);
+    });
+  }
+</script>
+
     .subtitle {
       margin: 10px 0 20px;
       color: #555;
