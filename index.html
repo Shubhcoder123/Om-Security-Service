@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ACCESS AI - AI Tools Hub</title>
- <link rel="stylesheet" href="style.css">
-<script src="app.js"></script>
+  <link rel="stylesheet" href="style.css"/>
   <style>
     .subtitle {
       margin: 10px 0 20px;
@@ -21,6 +20,7 @@
     }
   </style>
 </head>
+<script src="app.js"></script>
 <body>
   <div class="container">
     <div class="logo">
@@ -42,25 +42,31 @@
       <div class="tag">Video</div>
     </div>
 
-    <div class="section-title">Featured Tools</div>
-    <div class="tools-grid">
-      <div class="tool-card featured" data-title="GPT-3" data-tags="text">
-        <div class="tool-title">💬 CHATBOT</div>
-        <div class="tool-desc">Language model</div>
-      </div>
-      <div class="tool-card featured" data-title="Image Generator" data-tags="image">
-        <div class="tool-title">🖼️ Image Generator</div>
-        <div class="tool-desc">Generate images</div>
-      </div>
-      <div class="tool-card featured" data-title="Code Assistant" data-tags="code">
-        <div class="tool-title">💻 Code Assistant</div>
-        <div class="tool-desc">Coding help</div>
-      </div>
-      <div class="tool-card featured" data-title="Video Editor" data-tags="video">
-        <div class="tool-title">🎬 Video Editor</div>
-        <div class="tool-desc">Edit videos</div>
-      </div>
-    </div>
+<h2 class="section-title">Featured Tools</h2>
+
+<div class="tools-grid featured-tools-grid">
+
+  <div class="tool-card">
+    <div class="tool-title">🤖 CHATBOT</div>
+    <div class="tool-description">Language model</div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-title">🖼️ Image Generator</div>
+    <div class="tool-description">Generate images</div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-title">💻 Code Assistant</div>
+    <div class="tool-description">Coding help</div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-title">🎬 Video Editor</div>
+    <div class="tool-description">Edit videos</div>
+  </div>
+
+</div>
 
     <div class="section-title">Popular Tools</div>
     <div class="popular-tools" id="popularTools">
@@ -115,8 +121,265 @@
         <a class="use-btn" href="https://www.copy.ai/" target="_blank" rel="noopener noreferrer">Use Tool</a>
       </div>
     </div>
+    <!-- UPCOMING TOOLS Section -->
+<div class="section-title">Upcoming Tools</div>
+<div class="popular-tools" id="upcomingTools">
+  
+  <div class="tool-card" data-title="Moonvalley AI" data-tags="video">
+    <div class="tool-title">🌕 Moonvalley AI</div>
+    <div class="tool-desc">Next-gen AI video generation (like Sora AI alternative)</div>
+    <a class="use-btn" href="https://www.moonvalley.ai/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+  </div>
 
-    <div class="section-title">ALL AI TOOLS</div>
+  <div class="tool-card" data-title="Krea AI" data-tags="image">
+    <div class="tool-title">🎨 Krea AI</div>
+    <div class="tool-desc">Real-time image generation and editing with AI</div>
+    <a class="use-btn" href="https://www.krea.ai/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+  </div>
+
+  <div class="tool-card" data-title="Dream Machine" data-tags="video">
+    <div class="tool-title">🎥 Dream Machine</div>
+    <div class="tool-desc">Turn text prompts into ultra-realistic videos</div>
+    <a class="use-btn" href="https://www.luma.ai/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+  </div>
+
+  <div class="tool-card" data-title="Suno AI" data-tags="audio">
+    <div class="tool-title">🎶 Suno AI</div>
+    <div class="tool-desc">AI that creates full songs with lyrics and vocals</div>
+    <a class="use-btn" href="https://www.suno.ai/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+  </div>
+
+  <div class="tool-card" data-title="Imagine with Meta" data-tags="image">
+    <div class="tool-title">🖌️ Imagine by Meta</div>
+    <div class="tool-desc">Meta's AI for high-quality image generation from text</div>
+    <a class="use-btn" href="https://imagine.meta.com/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+  </div>
+
+  <div class="tool-card" data-title="Devin AI" data-tags="code">
+    <div class="tool-title">👨‍💻 Devin AI</div>
+    <div class="tool-desc">World’s first AI software engineer (builds projects end-to-end)</div>
+    <a class="use-btn" href="https://www.cognition-labs.com/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+  </div>
+
+  <div class="tool-card" data-title="Suno Chirp" data-tags="audio">
+    <div class="tool-title">🐦 Suno Chirp</div>
+    <div class="tool-desc">AI sound design for creating sound effects from text</div>
+    <a class="use-btn" href="https://chirp.suno.ai/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+  </div>
+
+  <div class="tool-card" data-title="Elicit" data-tags="text">
+    <div class="tool-title">🧠 Elicit</div>
+    <div class="tool-desc">Research assistant AI that finds papers and summarizes them</div>
+    <a class="use-btn" href="https://elicit.org/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+  </div>
+
+  <div class="tool-card" data-title="Recraft AI" data-tags="image">
+    <div class="tool-title">🖍️ Recraft AI</div>
+    <div class="tool-desc">Create vector illustrations, icons, and 3D graphics with AI</div>
+    <a class="use-btn" href="https://www.recraft.ai/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+  </div>
+
+  <div class="tool-card" data-title="Riffusion" data-tags="audio">
+    <div class="tool-title">🎼 Riffusion</div>
+    <div class="tool-desc">Real-time AI music creation by riffing on your ideas</div>
+    <a class="use-btn" href="https://www.riffusion.com/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+  </div>
+
+</div>
+
+  <div class="section-title">FREE AI TOOLS</div>
+<div class="tools-grid all-tools">
+  
+  <div class="tool-card all" data-title="Hugging Face" data-tags="text,image,code">
+    <div class="tool-title">🤗 Hugging Face</div>
+    <div class="tool-description">Free AI models for text, images, and code</div>
+    <a href="https://huggingface.co/" class="use-tool-btn" target="_blank">Use Tool</a>
+  </div>
+  <div class="tool-card" data-title="Pixlr" data-tags="image">
+  <div class="tool-title">🖌️ Pixlr</div>
+  <div class="tool-desc">Free AI photo editor and graphic design tool</div>
+  <a class="use-btn" href="https://pixlr.com/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+</div>
+  <div class="tool-card" data-title="Writesonic" data-tags="text">
+  <div class="tool-title">✍️ Writesonic</div>
+  <div class="tool-desc">AI writing assistant for blogs, ads, and eCommerce</div>
+  <a class="use-btn" href="https://writesonic.com/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+</div>
+  <div class="tool-card" data-title="Magician for Figma" data-tags="design">
+  <div class="tool-title">✨ Magician for Figma</div>
+  <div class="tool-desc">AI plugin for creating magical designs in Figma</div>
+  <a class="use-btn" href="https://magician.design/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+</div>
+<div class="tool-card" data-title="AskYourPDF" data-tags="text">
+  <div class="tool-title">📄 AskYourPDF</div>
+  <div class="tool-desc">Chat and extract information from PDF files</div>
+  <a class="use-btn" href="https://askyourpdf.com/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+</div>
+  <div class="tool-card" data-title="Illustroke" data-tags="design">
+  <div class="tool-title">🎨 Illustroke</div>
+  <div class="tool-desc">Generate vector illustrations from text prompts</div>
+  <a class="use-btn" href="https://illustroke.com/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+</div>
+
+  <div class="tool-card all" data-title="Perplexity AI" data-tags="text,chatbot">
+    <div class="tool-title">🔍 Perplexity AI</div>
+    <div class="tool-description">Free AI search engine and chatbot</div>
+    <a href="https://www.perplexity.ai/" class="use-tool-btn" target="_blank">Use Tool</a>
+  </div>
+
+  <div class="tool-card all" data-title="Leonardo AI" data-tags="image">
+    <div class="tool-title">🖌️ Leonardo AI</div>
+    <div class="tool-description">Free AI image generator and editor</div>
+    <a href="https://leonardo.ai/" class="use-tool-btn" target="_blank">Use Tool</a>
+  </div>
+
+  <div class="tool-card all" data-title="OpenArt" data-tags="art,nft">
+    <div class="tool-title">🖍️ OpenArt</div>
+    <div class="tool-description">Free AI tool for generating art and NFTs</div>
+    <a href="https://openart.ai/" class="use-tool-btn" target="_blank">Use Tool</a>
+  </div>
+
+  <div class="tool-card all" data-title="Tiipe" data-tags="text,product">
+    <div class="tool-title">🛒 Tiipe</div>
+    <div class="tool-description">Free AI tool for product descriptions</div>
+    <a href="https://www.tiipe.ai/" class="use-tool-btn" target="_blank">Use Tool</a>
+  </div>
+
+  <div class="tool-card all" data-title="Papercup" data-tags="video,translation">
+    <div class="tool-title">📄 Papercup</div>
+    <div class="tool-description">Translate and dub videos using AI</div>
+    <a href="https://www.papercup.com/" class="use-tool-btn" target="_blank">Use Tool</a>
+  </div>
+
+  <div class="tool-card all" data-title="Runway ML" data-tags="video,editing">
+    <div class="tool-title">🎥 Runway ML</div>
+    <div class="tool-description">Video editing with AI</div>
+    <a href="https://runwayml.com/" class="use-tool-btn" target="_blank">Use Tool</a>
+  </div>
+
+  <div class="tool-card all" data-title="Tableau AI" data-tags="database,visualization">
+    <div class="tool-title">📊 Tableau AI</div>
+    <div class="tool-description">AI for data visualization</div>
+    <a href="https://www.tableau.com/" class="use-tool-btn" target="_blank">Use Tool</a>
+  </div>
+
+  <div class="tool-card all" data-title="Scribbr AI" data-tags="text,grammar">
+    <div class="tool-title">✍️ Scribbr AI</div>
+    <div class="tool-description">Free AI grammar and citation checker</div>
+    <a href="https://www.scribbr.com/ai-proofreader/" class="use-tool-btn" target="_blank">Use Tool</a>
+  </div>
+
+  <div class="tool-card all" data-title="DiffusionBee" data-tags="image,generation">
+    <div class="tool-title">🐝 DiffusionBee</div>
+    <div class="tool-description">Free AI image generation on your device</div>
+    <a href="https://diffusionbee.com/" class="use-tool-btn" target="_blank">Use Tool</a>
+  </div>
+  <div class="tool-card" data-title="Beatoven.ai" data-tags="audio">
+  <div class="tool-title">🎵 Beatoven.ai</div>
+  <div class="tool-desc">AI music generation tailored for videos and podcasts</div>
+  <a class="use-btn" href="https://www.beatoven.ai/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+</div>
+
+</div>
+<!-- More FREE AI TOOLS with Emojis -->
+<div class="tools-grid all-tools">
+
+  <div class="tool-card">
+    <div class="tool-title">🔍 Perplexity AI</div>
+    <div class="tool-description">AI-powered search engine with citations</div>
+    <a href="https://www.perplexity.ai/" target="_blank" class="use-tool-btn">Use Tool</a>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-title">🎨 Leonardo AI</div>
+    <div class="tool-description">Free AI image generation with art models</div>
+    <a href="https://leonardo.ai/" target="_blank" class="use-tool-btn">Use Tool</a>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-title">🎬 Kaiber</div>
+    <div class="tool-description">Create AI videos from images or text</div>
+    <a href="https://www.kaiber.ai/" target="_blank" class="use-tool-btn">Use Tool</a>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-title">🎵 Soundraw</div>
+    <div class="tool-description">Generate royalty-free AI music</div>
+    <a href="https://soundraw.io/" target="_blank" class="use-tool-btn">Use Tool</a>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-title">📊 Tome</div>
+    <div class="tool-description">Create AI-powered presentations fast</div>
+    <a href="https://tome.app/" target="_blank" class="use-tool-btn">Use Tool</a>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-title">🎞️ Runway ML</div>
+    <div class="tool-description">AI video editing and effects platform</div>
+    <a href="https://runwayml.com/" target="_blank" class="use-tool-btn">Use Tool</a>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-title">🎙️ Descript</div>
+    <div class="tool-description">Podcast & video editor with AI tools</div>
+    <a href="https://www.descript.com/" target="_blank" class="use-tool-btn">Use Tool</a>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-title">✍️ Jenni AI</div>
+    <div class="tool-description">Academic writing and research assistant</div>
+    <a href="https://jenni.ai/" target="_blank" class="use-tool-btn">Use Tool</a>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-title">🌐 Durable</div>
+    <div class="tool-description">Build a free AI website in seconds</div>
+    <a href="https://durable.co/" target="_blank" class="use-tool-btn">Use Tool</a>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-title">🧠 Notion AI</div>
+    <div class="tool-description">AI assistant inside Notion workspace</div>
+    <a href="https://www.notion.so/product/ai" target="_blank" class="use-tool-btn">Use Tool</a>
+  </div>
+  <div class="tool-card" data-title="Stockimg AI" data-tags="image">
+  <div class="tool-title">🖼️ Stockimg AI</div>
+  <div class="tool-desc">Create stock images, book covers, posters with AI</div>
+  <a class="use-btn" href="https://stockimg.ai/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+</div>
+  <div class="tool-card" data-title="Codeium" data-tags="code">
+  <div class="tool-title">💻 Codeium</div>
+  <div class="tool-desc">Free AI coding assistant and code autocomplete</div>
+  <a class="use-btn" href="https://www.codeium.com/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+</div>
+  <div class="tool-card" data-title="SciSpace" data-tags="text">
+  <div class="tool-title">📚 SciSpace</div>
+  <div class="tool-desc">AI tool for reading, understanding, and explaining research papers</div>
+  <a class="use-btn" href="https://typeset.io/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+</div>
+  <div class="tool-card" data-title="Opus Clip" data-tags="video">
+  <div class="tool-title">🎬 Opus Clip</div>
+  <div class="tool-desc">Turn long videos into viral short clips using AI</div>
+  <a class="use-btn" href="https://www.opus.pro/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+</div>
+  <div class="tool-card" data-title="Fotor AI" data-tags="image">
+  <div class="tool-title">📷 Fotor AI</div>
+  <div class="tool-desc">Photo editing, AI image generator, and background remover</div>
+  <a class="use-btn" href="https://www.fotor.com/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+</div>
+  <div class="tool-card" data-title="Supermeme.ai" data-tags="text">
+  <div class="tool-title">😂 Supermeme.ai</div>
+  <div class="tool-desc">Generate AI memes automatically from your text input</div>
+  <a class="use-btn" href="https://www.supermeme.ai/" target="_blank" rel="noopener noreferrer">Use Tool</a>
+</div>
+
+
+
+</div>
+
+
+    <div class="section-title">OTHER BEST TOOLS</div>
     <div class="tools-grid all-tools">
       <div class="tool-card all" data-title="Pictory" data-tags="video">
         <div class="tool-title">🎞️ Pictory</div>
@@ -177,6 +440,126 @@
         <div class="tool-desc">Turn blog posts into videos using AI</div>
         <a class="use-btn" href="https://lumen5.com/" target="_blank">Use Tool</a>
       </div>
+      <div class="tool-card all" data-title="Beautiful.ai" data-tags="presentation">
+  <div class="tool-title">📊 Beautiful.ai</div>
+  <div class="tool-desc">AI-powered presentation builder</div>
+  <a class="use-btn" href="https://www.beautiful.ai/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="DeepL Translator" data-tags="text">
+  <div class="tool-title">🌐 DeepL Translator</div>
+  <div class="tool-desc">Advanced AI translation tool</div>
+  <a class="use-btn" href="https://www.deepl.com/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="Replit" data-tags="code">
+  <div class="tool-title">👨‍💻 Replit</div>
+  <div class="tool-desc">Collaborative coding platform with AI features</div>
+  <a class="use-btn" href="https://replit.com/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="DreamStudio" data-tags="image">
+  <div class="tool-title">🎨 DreamStudio</div>
+  <div class="tool-desc">Create AI-generated artwork</div>
+  <a class="use-btn" href="https://dreamstudio.ai/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="QuillBot" data-tags="text">
+  <div class="tool-title">📝 QuillBot</div>
+  <div class="tool-desc">AI paraphrasing and writing tool</div>
+  <a class="use-btn" href="https://quillbot.com/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="Soundraw" data-tags="audio">
+  <div class="tool-title">🎵 Soundraw</div>
+  <div class="tool-desc">AI music generator</div>
+  <a class="use-btn" href="https://soundraw.io/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="Papercup" data-tags="video,audio">
+  <div class="tool-title">🎙️ Papercup</div>
+  <div class="tool-desc">AI dubbing for videos</div>
+  <a class="use-btn" href="https://www.papercup.com/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="CopySmith" data-tags="text">
+  <div class="tool-title">✍️ CopySmith</div>
+  <div class="tool-desc">AI for marketing copy generation</div>
+  <a class="use-btn" href="https://copysmith.ai/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="Magenta Studio" data-tags="audio">
+  <div class="tool-title">🎼 Magenta Studio</div>
+  <div class="tool-desc">Music creation with machine learning</div>
+  <a class="use-btn" href="https://magenta.tensorflow.org/studio" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="Let's Enhance" data-tags="image">
+  <div class="tool-title">🔍 Let's Enhance</div>
+  <div class="tool-desc">Enhance image quality with AI</div>
+  <a class="use-btn" href="https://letsenhance.io/" target="_blank">Use Tool</a>
+</div>
+      <div class="tool-card all" data-title="Runway" data-tags="video,image">
+  <div class="tool-title">🎥 Runway</div>
+  <div class="tool-desc">AI video editing and content creation</div>
+  <a class="use-btn" href="https://runwayml.com/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="Tome" data-tags="presentation">
+  <div class="tool-title">📖 Tome</div>
+  <div class="tool-desc">AI storytelling and presentation tool</div>
+  <a class="use-btn" href="https://tome.app/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="Hotpot.ai" data-tags="image">
+  <div class="tool-title">🔥 Hotpot.ai</div>
+  <div class="tool-desc">Create graphics, pictures, and art with AI</div>
+  <a class="use-btn" href="https://hotpot.ai/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="Otter.ai" data-tags="audio,text">
+  <div class="tool-title">🦦 Otter.ai</div>
+  <div class="tool-desc">AI meeting transcription and notes</div>
+  <a class="use-btn" href="https://otter.ai/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="Fliki" data-tags="video, audio">
+  <div class="tool-title">🎬 Fliki</div>
+  <div class="tool-desc">Text-to-video and text-to-speech creation</div>
+  <a class="use-btn" href="https://fliki.ai/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="Designs.ai" data-tags="image,video">
+  <div class="tool-title">🎨 Designs.ai</div>
+  <div class="tool-desc">AI design tools for logos, videos, banners</div>
+  <a class="use-btn" href="https://designs.ai/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="Glasp" data-tags="text">
+  <div class="tool-title">📚 Glasp</div>
+  <div class="tool-desc">AI tool for highlighting and summarizing online content</div>
+  <a class="use-btn" href="https://glasp.co/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="Veed.io" data-tags="video">
+  <div class="tool-title">🎞️ Veed.io</div>
+  <div class="tool-desc">Online video editing with AI tools</div>
+  <a class="use-btn" href="https://www.veed.io/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="Poised" data-tags="audio">
+  <div class="tool-title">🎤 Poised</div>
+  <div class="tool-desc">AI-powered communication coach</div>
+  <a class="use-btn" href="https://www.poised.com/" target="_blank">Use Tool</a>
+</div>
+
+<div class="tool-card all" data-title="Remove.bg" data-tags="image">
+  <div class="tool-title">🖼️ Remove.bg</div>
+  <div class="tool-desc">Remove image backgrounds automatically with AI</div>
+  <a class="use-btn" href="https://www.remove.bg/" target="_blank">Use Tool</a>
+</div>
+
+
     </div>
    <script>
     // Animation: Rotate Popular Tools in loop
@@ -203,5 +586,142 @@
       opacity: 0;
       transform: translateY(20px);
     }
+    <script>
+// Fade effect helper
+function fadeIn(el) {
+  el.style.opacity = 0;
+  el.style.display = 'block';
+  let last = +new Date();
+  const tick = function() {
+    el.style.opacity = +el.style.opacity + (new Date() - last) / 200;
+    last = +new Date();
+    if (+el.style.opacity < 1) {
+      requestAnimationFrame(tick);
+    }
+  };
+  tick();
+}
+
+// Filtering function
+function filterTools(category) {
+  const allCards = document.querySelectorAll('.tool-card');
+  allCards.forEach(card => {
+    const tags = card.getAttribute('data-tags');
+    const match = category === 'all' || tags.includes(category);
+    card.style.display = match ? 'block' : 'none';
+    card.style.opacity = match ? '0' : '0';
+    if (match) fadeIn(card);
+  });
+}
+
+// Search function
+document.getElementById('searchInput').addEventListener('input', function() {
+  const query = this.value.toLowerCase();
+  const allCards = document.querySelectorAll('.tool-card');
+  allCards.forEach(card => {
+    const title = card.getAttribute('data-title').toLowerCase();
+    const match = title.includes(query);
+    card.style.display = match ? 'block' : 'none';
+    card.style.opacity = match ? '0' : '0';
+    if (match) fadeIn(card);
+  });
+});
+
+// Category button events
+document.querySelectorAll('.tag').forEach(tagBtn => {
+  tagBtn.addEventListener('click', () => {
+    const category = tagBtn.textContent.toLowerCase();
+    filterTools(category);
+  });
+});
+<script>
+<script src="app.js"></script>
+</body>
+</html>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    const tags = document.querySelectorAll('.tag');
+    const allToolCards = document.querySelectorAll('.tool-card');
+
+    let activeTag = 'all';
+
+    // FILTER TOOLS
+    function filterTools() {
+      const searchTerm = searchInput.value.toLowerCase();
+
+      allToolCards.forEach(card => {
+        const title = card.getAttribute('data-title')?.toLowerCase() || '';
+        const tags = card.getAttribute('data-tags')?.toLowerCase() || '';
+        const matchesSearch = title.includes(searchTerm);
+        const matchesTag = activeTag === 'all' || tags.includes(activeTag);
+
+        if (matchesSearch && matchesTag) {
+          card.style.display = 'block';
+          card.classList.add('fade-in');
+        } else {
+          card.style.display = 'none';
+          card.classList.remove('fade-in');
+        }
+      });
+    }
+
+    // HANDLE SEARCH
+    searchInput.addEventListener('input', filterTools);
+
+    // HANDLE TAG FILTERS
+    tags.forEach(tag => {
+      tag.addEventListener('click', () => {
+        tags.forEach(t => t.classList.remove('active'));
+        tag.classList.add('active');
+        activeTag = tag.textContent.toLowerCase();
+        filterTools();
+      });
+    });
+
+    // INITIAL LOAD
+    filterTools();
+  });
+</script>
+
+<style>
+  .fade-in {
+    animation: fadeIn 0.4s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .tag.active {
+    background-color: #333;
+    color: #fff;
+  }
+</style>
+<!-- your full HTML content -->
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.getElementById('searchInput');
+  const toolCards = document.querySelectorAll('.tool-card');
+
+  searchInput.addEventListener('input', () => {
+    const searchText = searchInput.value.toLowerCase();
+
+    toolCards.forEach(card => {
+      const title = card.getAttribute('data-title').toLowerCase();
+      const tags = card.getAttribute('data-tags').toLowerCase();
+
+      if (title.includes(searchText) || tags.includes(searchText)) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
+<script>
+<script src="app.js"></script>
 </body>
 </html>
