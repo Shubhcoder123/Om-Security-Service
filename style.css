@@ -104,14 +104,64 @@ body {
   margin-top: 20px;
 }
 
-/* ✅ Featured Tools Card */
-.tools-grid .tool-card {
-  background-color: #e0f7f; /* Light teal */
-  border: none;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.featured-section {
+  text-align: center;
+  margin-top: 40px;
 }
+
+.tool-slider {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.tool-track {
+  display: flex;
+  width: 200%;
+  animation: slideLoop 12s linear infinite;
+}
+
+.tool-slide {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 20px;
+}
+
+.tool-card {
+  background: #fff;
+  padding: 20px;
+  width: 180px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.5s ease;
+}
+
+.tool-card:hover {
+  transform: translateY(-5px);
+}
+
+.tool-emoji {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.tool-title {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.tool-desc {
+  font-size: 13px;
+  color: #555;
+}
+
+@keyframes slideLoop {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-100%); }
+  100% { transform: translateX(0); }
+}
+
 
 /* ✅ Popular Tools Card */
 .popular-tools .tool-card {

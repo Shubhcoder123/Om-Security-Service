@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ACCESS AI - AI Tools Hub</title>
-  <link rel="stylesheet" href="style.css?v=4"/>
+  <link rel="stylesheet" href="style.css?v=2"/>
   <style>
-<script>
+   <script>
   if ('caches' in window) {
     caches.keys().then(function(cacheNames) {
       cacheNames.forEach(function(cacheName) {
@@ -38,7 +38,6 @@
     }
   </style>
 </head>
-<script src="app.js"></script>
 <body>
   <div class="container">
     <div class="logo">
@@ -47,10 +46,11 @@
     </div>
 
     <div class="subtitle">Discover the best AI tools in one place</div>
- <div style="font-style: italic; font-weight: bold; text-align: center; margin-top: -10px;">
+  <div style="font-style: italic; font-weight: bold; text-align: center; margin-top: -10px;">
   (NOTE : AI OPEN SPEED = INTERNET SPEED)
     
 </div>
+
 
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Search tools..." />
@@ -64,31 +64,27 @@
       <div class="tag">Video</div>
     </div>
 
-<h2 class="section-title">Featured Tools</h2>
-
-<div class="tools-grid featured-tools-grid">
-
-  <div class="tool-card">
-    <div class="tool-title">🤖 CHATBOT</div>
-    <div class="tool-description">Language model</div>
+<section class="featured-section">
+  <h2 class="section-title">Featured Tools</h2>
+  <div class="tool-slider">
+    <div class="tool-track">
+      <!-- Slide 1 -->
+      <div class="tool-slide">
+        <div class="tool-card"><div class="tool-emoji">🧠</div><div class="tool-title">CHATBOT</div><div class="tool-desc">Language model</div></div>
+        <div class="tool-card"><div class="tool-emoji">🎨</div><div class="tool-title">Image Generator</div><div class="tool-desc">Generate images</div></div>
+        <div class="tool-card"><div class="tool-emoji">💻</div><div class="tool-title">Code Assistant</div><div class="tool-desc">Coding help</div></div>
+        <div class="tool-card"><div class="tool-emoji">🎬</div><div class="tool-title">Video Editor</div><div class="tool-desc">Edit videos</div></div>
+      </div>
+      <!-- Slide 2 -->
+      <div class="tool-slide">
+        <div class="tool-card"><div class="tool-emoji"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube" style="height: 25px;"></div><div class="tool-title">YouTube Tools</div><div class="tool-desc">AI for creators</div></div>
+        <div class="tool-card"><div class="tool-emoji">🎤</div><div class="tool-title">Voice Tools</div><div class="tool-desc">Voiceover, cloning</div></div>
+        <div class="tool-card"><div class="tool-emoji">📈</div><div class="tool-title">Business Tools</div><div class="tool-desc">Boost productivity</div></div>
+        <div class="tool-card"><div class="tool-emoji">📝</div><div class="tool-title">Text AI</div><div class="tool-desc">Write anything</div></div>
+      </div>
+    </div>
   </div>
-
-  <div class="tool-card">
-    <div class="tool-title">🖼️ Image Generator</div>
-    <div class="tool-description">Generate images</div>
-  </div>
-
-  <div class="tool-card">
-    <div class="tool-title">💻 Code Assistant</div>
-    <div class="tool-description">Coding help</div>
-  </div>
-
-  <div class="tool-card">
-    <div class="tool-title">🎬 Video Editor</div>
-    <div class="tool-description">Edit videos</div>
-  </div>
-
-</div>
+</section>
 
     <div class="section-title">Popular Tools</div>
     <div class="popular-tools" id="popularTools">
@@ -656,8 +652,8 @@ document.querySelectorAll('.tag').forEach(tagBtn => {
     filterTools(category);
   });
 });
-<script>
-<script src="app.js"></script>
+</script>
+
 </body>
 </html>
 <script>
@@ -743,10 +739,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-<script>
-<script src="app.js?v=4"></script>
-<p style="text-align: center; font-size: 14px; color: gray; margin-top: 40px; line-height: 1.6;">
+</script>
+   <p style="text-align: center; font-size: 14px; color: gray; margin-top: 40px; line-height: 1.6;">
   DISCLAIMER: ACCESS AI acts solely as a directory providing links to third-party AI tools and services. We do not claim any ownership, affiliation, partnership, or responsibility for the operation, content, or functionality of any external services. All trademarks, logos, and copyrights are the property of their respective owners. Use of any linked tool is subject to the respective service’s terms and conditions.
 </p>
+
 </body>
 </html>
