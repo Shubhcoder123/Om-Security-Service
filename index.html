@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ACCESS AI - AI Tools Hub</title>
-  <link rel="stylesheet" href="style.css?v=2"/>
+  <link rel="stylesheet" href="style.css?v=5"/>
   <style>
    <script>
   if ('caches' in window) {
@@ -47,7 +47,7 @@
 
     <div class="subtitle">Discover the best AI tools in one place</div>
   <div style="font-style: italic; font-weight: bold; text-align: center; margin-top: -10px;">
-  (NOTE : AI OPEN SPEED = INTERNET SPEED)
+  (NOTE : AI OPEN SPEED ∝  "INTERNET SPEED")
     
 </div>
 
@@ -743,6 +743,26 @@ document.addEventListener("DOMContentLoaded", () => {
    <p style="text-align: center; font-size: 14px; color: gray; margin-top: 40px; line-height: 1.6;">
   DISCLAIMER: ACCESS AI acts solely as a directory providing links to third-party AI tools and services. We do not claim any ownership, affiliation, partnership, or responsibility for the operation, content, or functionality of any external services. All trademarks, logos, and copyrights are the property of their respective owners. Use of any linked tool is subject to the respective service’s terms and conditions.
 </p>
+    <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
 
+    searchInput.addEventListener("input", function () {
+      const searchTerm = this.value.toLowerCase().trim();
+      const tools = document.querySelectorAll(".tool-card");
+
+      tools.forEach(tool => {
+        const name = tool.dataset.name?.toLowerCase() || "";
+        if (name.includes(searchTerm) || searchTerm === "") {
+          tool.style.display = "block";
+        } else {
+          tool.style.display = "none";
+        }
+      });
+    });
+  });
+</script>
+
+<script src="app.js"></script>
 </body>
 </html>
