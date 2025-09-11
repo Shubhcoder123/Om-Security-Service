@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grozii — Order Placed</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main class="container center">
+    <div class="success-card">
+      <div class="big-dot"></div>
+      <h1>Order placed!</h1>
+      <p>Your order <strong id="orderId"></strong> has been received. We’ll notify you shortly.</p>
+      <a class="btn btn-primary" href="index.html">Back to Home</a>
+    </div>
+  </main>
+  <script>
+    const id = new URLSearchParams(location.search).get('id') || '';
+    document.getElementById('orderId').textContent = id;
+  </script>
+</body>
+</html>

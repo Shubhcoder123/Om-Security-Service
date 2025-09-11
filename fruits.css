@@ -1,0 +1,398 @@
+/* ===============================
+   Fruits Page Styles
+   =============================== */
+
+/* Background */
+body.fruit-bg {
+  position: relative;
+  background: url("https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z3JvY2VyeSUyMHN0b3JlfGVufDB8fDB8fHww&auto=format&fit=crop&w=900&q=60") no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  color: #111827;
+  padding: 20px;
+  margin: 0;
+}
+
+/* White overlay for readability */
+body.fruit-bg::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255, 255, 255, 0.85);
+  z-index: 0;
+}
+
+header, main, footer, .search-box, .offer-banner {
+  position: relative;
+  z-index: 1;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header styles */
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+/* Header navigation buttons */
+.header-nav {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 15px;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background: #2563eb;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background 0.3s, transform 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.nav-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.nav-btn i {
+  margin-right: 8px;
+}
+
+.cart-btn {
+  position: relative;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+/* Search box */
+.search-box {
+  margin: 1.5rem auto;
+  text-align: center;
+}
+.search-box input {
+  width: 100%;
+  max-width: 500px;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  background: #fff;
+}
+.search-box input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+  outline: none;
+}
+
+/* Product Grid - 5 per row */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.8rem;
+  justify-items: center;
+}
+
+/* Square Card */
+.product-card {
+  width: 170px;               /* slightly larger card */
+  aspect-ratio: 1 / 1;
+  background: #fff;
+  border-radius: 14px;
+  padding: 0.8rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12),
+              0 0 15px rgba(37,99,235,0.2);
+}
+
+/* Product Image (Larger inside card) */
+.product-card img {
+  width: 100%;
+  height: 105px;  /* Increased from 90px to 105px */
+  object-fit: contain;
+  margin-bottom: 0.5rem;
+}
+
+/* Product Name (small text) */
+.product-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0.2rem 0;
+  color: #111827;
+}
+
+/* Product Price (tiny, subtle) */
+.product-price {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #2563eb;
+  margin-bottom: 0.4rem;
+}
+
+/* Quantity controls (very compact) */
+.quantity-control {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.2rem 0;
+}
+.qty-btn {
+  background: #f3f4f6;
+  border: none;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.7rem;
+  cursor: pointer;
+  border-radius: 6px;
+  margin: 0 0.15rem;
+}
+.quantity-control input {
+  width: 28px;
+  text-align: center;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.15rem;
+  font-size: 0.7rem;
+}
+
+/* Add to Cart button (tiny + clean) */
+.add-to-cart {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  width: 100%;
+  font-size: 0.75rem;
+  transition: background 0.2s, transform 0.1s;
+  margin-top: 5px;
+}
+.add-to-cart:hover {
+  background: #1d4ed8;
+  transform: scale(1.03);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .header-nav {
+    position: relative;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+}
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .header-nav {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+}
+
+/* CSS to enlarge fruit images */
+.fruit-item img {
+    width: 110px; /* Slightly larger than original */
+    height: 110px; /* Slightly larger than original */
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+}
+
+.fruit-item img:hover {
+    transform: scale(1.05); /* Subtle hover effect */
+}
+
+/* Adjust layout to accommodate larger images */
+.fruit-item {
+    padding: 15px;
+    text-align: center;
+}
+
+.fruit-name {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.fruit-price {
+    color: #4CAF50;
+    margin: 5px 0;
+}
+
+.quantity-controls {
+    margin: 10px 0;
+}
+
+/* Add to Cart button with fluid animation */
+.add-to-cart {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    270deg,
+    #ff0080,
+    #7928ca,
+    #2afadf,
+    #00ff6c,
+    #ffcc00,
+    #ff0080
+  );
+  background-size: 1200% 1200%; /* makes animation smooth */
+  color: #fff;
+  border: none;
+  padding: 0.45rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  width: 100%;
+  font-size: 0.85rem;
+  animation: fluidColors 10s ease infinite;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.add-to-cart:hover {
+  transform: scale(1.05);
+}
+
+/* Keyframes for moving gradient */
+@keyframes fluidColors {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Grid - 4 cards per row */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  justify-items: center;
+}
+
+/* Square Product Card */
+.product-card {
+  width: 200px;               /* bigger card */
+  aspect-ratio: 1 / 1;        /* square shape */
+  background: #fff;
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12),
+              0 0 15px rgba(37,99,235,0.2);
+}
+
+/* Bigger Product Image */
+.product-card img {
+  width: 100%;
+  height: 120px;  /* increased size */
+  object-fit: contain;
+  margin-bottom: 0.6rem;
+}
+
+/* Add to Cart button with fluid animation */
+.add-to-cart {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    270deg,
+    #ff0080,
+    #7928ca,
+    #2afadf,
+    #00ff6c,
+    #ffcc00,
+    #ff0080
+  );
+  background-size: 1200% 1200%;
+  color: #fff;
+  border: none;
+  padding: 0.45rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  width: 100%;
+  font-size: 0.85rem;
+  animation: fluidColors 10s ease infinite;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.add-to-cart:hover {
+  transform: scale(1.05);
+}
+
+/* Fluid gradient animation */
+@keyframes fluidColors {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
