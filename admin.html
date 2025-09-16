@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - OM Security Services</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase App (core) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <!-- Firebase Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
     <style>
         :root {
             --primary: #0a192f;
@@ -469,7 +475,22 @@
     </div>
 
     <script>
-        // Admin credentials (in a real app, this would be server-side)
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAOAjwKhF6iGr2zqONEevAXwMP1YHWO0gY",
+            authDomain: "omsecurity-98f1e.firebaseapp.com",
+            projectId: "omsecurity-98f1e",
+            storageBucket: "omsecurity-98f1e.firebasestorage.app",
+            messagingSenderId: "265699315904",
+            appId: "1:265699315904:web:7257cfee28cab596f99d25",
+            measurementId: "G-167NK98B7M"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Admin credentials
         const ADMIN_CREDENTIALS = {
             username: "omsecurity",
             password: "sushil123"
@@ -480,57 +501,35 @@
             return localStorage.getItem('adminAuthenticated') === 'true';
         }
 
-        // Generate a unique serial code
-        function generateSerialCode() {
-            const timestamp = new Date().getTime().toString(36);
-            const randomStr = Math.random().toString(36).substr(2, 5).toUpperCase();
-            return `OM-${timestamp}-${randomStr}`;
-        }
-
-        // Initialize data storage
-        function initStorage() {
-            if (!localStorage.getItem('guardRequests')) {
-                localStorage.setItem('guardRequests', JSON.stringify([]));
+        // Get all guard requests from Firebase
+        async function getGuardRequests() {
+            try {
+                const snapshot = await db.collection("guardRequests").get();
+                const requests = [];
+                snapshot.forEach(doc => {
+                    requests.push({ id: doc.id, ...doc.data() });
+                });
+                return requests;
+            } catch (error) {
+                console.error("Error getting documents: ", error);
+                return [];
             }
         }
 
-        // Get all guard requests
-        function getGuardRequests() {
-            return JSON.parse(localStorage.getItem('guardRequests')) || [];
+        // Update a guard request status in Firebase
+        async function updateRequestStatus(id, status) {
+            try {
+                await db.collection("guardRequests").doc(id).update({
+                    status: status
+                });
+                updateStats();
+                renderRequestsTable();
+                return true;
+            } catch (error) {
+                console.error("Error updating document: ", error);
+                return false;
+            }
         }
-
-        // Save a guard request
-        function saveGuardRequest(data) {
-            const requests = getGuardRequests();
-            const newRequest = {
-                id: Date.now(),
-                serialCode: generateSerialCode(),
-                timestamp: new Date().toISOString(),
-                status: 'pending',
-                ...data
-            };
-            requests.push(newRequest);
-            localStorage.setItem('guardRequests', JSON.stringify(requests));
-            return newRequest;
-        }
-
-        // ... (previous admin panel code remains the same)
-
-// Update a guard request status
-function updateRequestStatus(id, status) {
-    const requests = getGuardRequests();
-    const requestIndex = requests.findIndex(req => req.id === id);
-    if (requestIndex !== -1) {
-        requests[requestIndex].status = status;
-        localStorage.setItem('guardRequests', JSON.stringify(requests));
-        updateStats();
-        renderRequestsTable(); // Refresh the table
-        return true;
-    }
-    return false;
-}
-
-// ... (rest of the admin panel code remains the same)
 
         // Format date for display
         function formatDate(dateString) {
@@ -539,8 +538,8 @@ function updateRequestStatus(id, status) {
         }
 
         // Update dashboard stats
-        function updateStats() {
-            const requests = getGuardRequests();
+        async function updateStats() {
+            const requests = await getGuardRequests();
             document.getElementById('totalRequests').textContent = requests.length;
             document.getElementById('pendingRequests').textContent = requests.filter(r => r.status === 'pending').length;
             document.getElementById('approvedRequests').textContent = requests.filter(r => r.status === 'approved').length;
@@ -548,8 +547,8 @@ function updateRequestStatus(id, status) {
         }
 
         // Render requests table
-        function renderRequestsTable() {
-            const requests = getGuardRequests();
+        async function renderRequestsTable() {
+            const requests = await getGuardRequests();
             const statusFilter = document.getElementById('statusFilter').value;
             const serviceFilter = document.getElementById('serviceFilter').value;
             
@@ -595,77 +594,85 @@ function updateRequestStatus(id, status) {
             
             // Add event listeners to action buttons
             document.querySelectorAll('.btn-view').forEach(btn => {
-                btn.addEventListener('click', () => showRequestDetails(parseInt(btn.getAttribute('data-id'))));
+                btn.addEventListener('click', () => showRequestDetails(btn.getAttribute('data-id')));
             });
             
             document.querySelectorAll('.btn-approve').forEach(btn => {
-                btn.addEventListener('click', () => updateRequestStatus(parseInt(btn.getAttribute('data-id')), 'approved'));
+                btn.addEventListener('click', () => updateRequestStatus(btn.getAttribute('data-id'), 'approved'));
             });
             
             document.querySelectorAll('.btn-reject').forEach(btn => {
-                btn.addEventListener('click', () => updateRequestStatus(parseInt(btn.getAttribute('data-id')), 'rejected'));
+                btn.addEventListener('click', () => updateRequestStatus(btn.getAttribute('data-id'), 'rejected'));
             });
         }
 
         // Show request details in modal
-        function showRequestDetails(id) {
-            const requests = getGuardRequests();
-            const request = requests.find(req => req.id === id);
-            
-            if (!request) return;
-            
-            const modalContent = document.getElementById('modalContent');
-            modalContent.innerHTML = `
-                <div class="detail-row">
-                    <div class="detail-label">Serial Code:</div>
-                    <div class="detail-value">${request.serialCode}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Date & Time:</div>
-                    <div class="detail-value">${formatDate(request.timestamp)}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Name:</div>
-                    <div class="detail-value">${request.name}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Email:</div>
-                    <div class="detail-value">${request.email}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Phone:</div>
-                    <div class="detail-value">${request.phone}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Service:</div>
-                    <div class="detail-value">${request.service.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Address:</div>
-                    <div class="detail-value">${request.address}</div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-label">Status:</div>
-                    <div class="detail-value"><span class="status-badge status-${request.status}">${request.status.charAt(0).toUpperCase() + request.status.slice(1)}</span></div>
-                </div>
-            `;
-            
-            document.getElementById('detailModal').style.display = 'flex';
+        async function showRequestDetails(id) {
+            try {
+                const doc = await db.collection("guardRequests").doc(id).get();
+                
+                if (!doc.exists) {
+                    console.error("No such document!");
+                    return;
+                }
+                
+                const request = { id: doc.id, ...doc.data() };
+                
+                const modalContent = document.getElementById('modalContent');
+                modalContent.innerHTML = `
+                    <div class="detail-row">
+                        <div class="detail-label">Serial Code:</div>
+                        <div class="detail-value">${request.serialCode}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Date & Time:</div>
+                        <div class="detail-value">${formatDate(request.timestamp)}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Name:</div>
+                        <div class="detail-value">${request.name}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Email:</div>
+                        <div class="detail-value">${request.email}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Phone:</div>
+                        <div class="detail-value">${request.phone}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Service:</div>
+                        <div class="detail-value">${request.service.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Address:</div>
+                        <div class="detail-value">${request.address}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Status:</div>
+                        <div class="detail-value"><span class="status-badge status-${request.status}">${request.status.charAt(0).toUpperCase() + request.status.slice(1)}</span></div>
+                    </div>
+                `;
+                
+                document.getElementById('detailModal').style.display = 'flex';
+            } catch (error) {
+                console.error("Error getting document:", error);
+            }
         }
 
         // Export data to CSV
-        function exportToCSV() {
-            const requests = getGuardRequests();
+        async function exportToCSV() {
+            const requests = await getGuardRequests();
             if (requests.length === 0) {
                 alert('No data to export');
                 return;
             }
             
             // Create CSV content
-            let csvContent = "Serial Code,Date,Name,Email,Phone,Service,Message,Status\n";
+            let csvContent = "Serial Code,Date,Name,Email,Phone,Service,Address,Status\n";
             
             requests.forEach(request => {
-                csvContent += `"${request.serialCode}","${formatDate(request.timestamp)}","${request.name}","${request.email}","${request.phone}","${request.service}","${request.message.replace(/"/g, '""')}","${request.status}"\n`;
+                csvContent += `"${request.serialCode}","${formatDate(request.timestamp)}","${request.name}","${request.email}","${request.phone}","${request.service}","${request.address.replace(/"/g, '""')}","${request.status}"\n`;
             });
             
             // Create download link
@@ -679,15 +686,13 @@ function updateRequestStatus(id, status) {
         }
 
         // Initialize the application
-        function initApp() {
-            initStorage();
-            
+        async function initApp() {
             // Check if user is already logged in
             if (checkAuth()) {
                 document.getElementById('loginPage').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'flex';
-                updateStats();
-                renderRequestsTable();
+                await updateStats();
+                await renderRequestsTable();
                 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { 
                     weekday: 'long', 
                     year: 'numeric', 
@@ -697,7 +702,7 @@ function updateRequestStatus(id, status) {
             }
             
             // Login button event
-            document.getElementById('loginBtn').addEventListener('click', () => {
+            document.getElementById('loginBtn').addEventListener('click', async () => {
                 const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
                 
@@ -705,8 +710,8 @@ function updateRequestStatus(id, status) {
                     localStorage.setItem('adminAuthenticated', 'true');
                     document.getElementById('loginPage').style.display = 'none';
                     document.getElementById('adminPanel').style.display = 'flex';
-                    updateStats();
-                    renderRequestsTable();
+                    await updateStats();
+                    await renderRequestsTable();
                     document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { 
                         weekday: 'long', 
                         year: 'numeric', 
@@ -744,24 +749,10 @@ function updateRequestStatus(id, status) {
                     document.getElementById('detailModal').style.display = 'none';
                 }
             });
-            
-            // Listen for storage events (for real-time updates if multiple tabs are open)
-            window.addEventListener('storage', () => {
-                if (checkAuth()) {
-                    updateStats();
-                    renderRequestsTable();
-                }
-            });
         }
 
         // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', initApp);
-
-        // Function to be called from the main form submission
-        window.processQuoteRequest = function(formData) {
-            const request = saveGuardRequest(formData);
-            return request.serialCode;
-        };
     </script>
 </body>
 </html>

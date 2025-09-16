@@ -1,3 +1,18 @@
+// Firebase configuration and initialization
+const firebaseConfig = {
+    apiKey: "AIzaSyAOAjwKhF6iGr2zqONEevAXwMP1YHWO0gY",
+    authDomain: "omsecurity-98f1e.firebaseapp.com",
+    projectId: "omsecurity-98f1e",
+    storageBucket: "omsecurity-98f1e.firebasestorage.app",
+    messagingSenderId: "265699315904",
+    appId: "1:265699315904:web:7257cfee28cab596f99d25",
+    measurementId: "G-167NK98B7M"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 // Mobile Menu Toggle
 const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 const nav = document.getElementById('nav');
@@ -57,11 +72,6 @@ setInterval(() => {
     showTestimonial(currentTestimonial);
 }, 5000);
 
-// Initialize guard requests storage if it doesn't exist
-if (!localStorage.getItem('guardRequests')) {
-    localStorage.setItem('guardRequests', JSON.stringify([]));
-}
-
 // Generate a unique serial code
 function generateSerialCode() {
     const timestamp = new Date().getTime().toString(36);
@@ -69,25 +79,27 @@ function generateSerialCode() {
     return `OM-${timestamp}-${randomStr}`;
 }
 
-// Save form data to localStorage
-function saveFormData(formData) {
-    const requests = JSON.parse(localStorage.getItem('guardRequests'));
-    const newRequest = {
-        id: Date.now(),
-        serialCode: generateSerialCode(),
-        timestamp: new Date().toISOString(),
-        status: 'pending',
-        ...formData
-    };
-    requests.push(newRequest);
-    localStorage.setItem('guardRequests', JSON.stringify(requests));
-    return newRequest.serialCode;
+// Save form data to Firebase
+async function saveFormData(formData) {
+    try {
+        const docRef = await db.collection("guardRequests").add({
+            serialCode: generateSerialCode(),
+            timestamp: new Date().toISOString(),
+            status: 'pending',
+            ...formData
+        });
+        console.log("Document written with ID: ", docRef.id);
+        return docRef.id;
+    } catch (e) {
+        console.error("Error adding document: ", e);
+        throw e;
+    }
 }
 
 // Form Submission Handling
 const quoteForm = document.getElementById('quoteForm');
 
-quoteForm.addEventListener('submit', (e) => {
+quoteForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
     // Basic validation
@@ -118,12 +130,17 @@ quoteForm.addEventListener('submit', (e) => {
         address: address
     };
     
-    // Save the data and get serial code
-    const serialCode = saveFormData(formData);
-    
-    // Show success message with serial code
-    showNotification(`Thank you for your request! Your reference code is: ${serialCode}. We will contact you shortly.`, 'success');
-    quoteForm.reset();
+    try {
+        // Save the data and get serial code
+        const docId = await saveFormData(formData);
+        
+        // Show success message with serial code
+        showNotification(`Thank you for your request! We will contact you shortly.`, 'success');
+        quoteForm.reset();
+    } catch (error) {
+        console.error("Error saving form data: ", error);
+        showNotification('There was an error submitting your request. Please try again.', 'error');
+    }
 });
 
 // Scroll animations
@@ -200,49 +217,6 @@ function showNotification(message, type) {
             <i class="fas fa-times"></i>
         </button>
     `;
-    
-    // Add styles for notification if they don't exist
-    if (!document.querySelector('#notification-styles')) {
-        const style = document.createElement('style');
-        style.id = 'notification-styles';
-        style.textContent = `
-            .form-notification {
-                position: fixed;
-                top: 100px;
-                right: 20px;
-                padding: 15px 20px;
-                border-radius: 8px;
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                min-width: 300px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-                z-index: 10000;
-                animation: slideIn 0.3s ease;
-            }
-            .form-notification.success {
-                background: var(--accent-dark);
-                border-left: 4px solid #2ecc71;
-            }
-            .form-notification.error {
-                background: #e74c3c;
-                border-left: 4px solid #c0392b;
-            }
-            .form-notification button {
-                background: transparent;
-                border: none;
-                color: white;
-                cursor: pointer;
-                margin-left: 15px;
-            }
-            @keyframes slideIn {
-                from { transform: translateX(100px); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-        `;
-        document.head.appendChild(style);
-    }
     
     document.body.appendChild(notification);
     
