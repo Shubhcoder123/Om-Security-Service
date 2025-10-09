@@ -6,9 +6,6 @@
     <title>MAARG - Search Engine</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
     <style>
         * {
             margin: 0;
@@ -686,7 +683,7 @@
             animation: fadeIn 0.3s ease;
         }
         
-        .calculator-popup, .weather-popup, .map-popup, .settings-popup {
+        .calculator-popup, .weather-popup, .settings-popup {
             background: var(--bg-primary);
             border-radius: 16px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -702,7 +699,6 @@
         
         .popup-overlay.active .calculator-popup,
         .popup-overlay.active .weather-popup,
-        .popup-overlay.active .map-popup,
         .popup-overlay.active .settings-popup {
             transform: scale(1);
             opacity: 1;
@@ -966,71 +962,6 @@
         }
         
         .weather-error {
-            text-align: center;
-            padding: 15px;
-            color: var(--error-color);
-            display: none;
-        }
-        
-        /* Map Styles */
-        .map-container {
-            height: 300px;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 15px;
-            border: 1px solid var(--border-color);
-        }
-        
-        .map-controls {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .map-btn {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-            flex: 1;
-        }
-        
-        .map-btn:hover {
-            background: var(--border-color);
-        }
-        
-        .map-btn.active {
-            background: var(--accent-color);
-            color: white;
-        }
-        
-        .location-info {
-            background: var(--bg-secondary);
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 13px;
-            display: none;
-        }
-        
-        .location-info p {
-            margin-bottom: 6px;
-        }
-        
-        .location-info p:last-child {
-            margin-bottom: 0;
-        }
-        
-        .map-loading {
-            text-align: center;
-            padding: 25px;
-            display: none;
-        }
-        
-        .map-error {
             text-align: center;
             padding: 15px;
             color: var(--error-color);
@@ -1670,46 +1601,6 @@
         </div>
     </div>
     
-    <!-- Map Popup -->
-    <div class="popup-overlay" id="mapPopup">
-        <div class="map-popup">
-            <div class="popup-header">
-                <div class="popup-title">
-                    <i class="fas fa-globe-asia"></i>
-                    <span>World Map Explorer</span>
-                </div>
-                <button class="close-popup" id="closeMap">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="map-container" id="mapContainer">
-                <div id="world-map"></div>
-            </div>
-            <div class="map-controls">
-                <button class="map-btn active" id="mapSatellite">Satellite</button>
-                <button class="map-btn" id="mapTerrain">Terrain</button>
-                <button class="map-btn" id="mapStandard">Standard</button>
-            </div>
-            <div class="location-info" id="locationInfo">
-                <p><strong>Location:</strong> <span id="locationName">Mumbai, Maharashtra, India</span></p>
-                <p><strong>Coordinates:</strong> <span id="locationCoords">19.0760° N, 72.8777° E</span></p>
-            </div>
-            <div class="map-loading" id="mapLoading">
-                <div class="loading-dots">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-                <p>Loading map...</p>
-            </div>
-            <div class="map-error" id="mapError">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>Unable to load map. Please check your connection.</p>
-            </div>
-        </div>
-    </div>
-    
     <!-- Settings Popup -->
     <div class="popup-overlay" id="settingsPopup">
         <div class="settings-popup">
@@ -1908,10 +1799,6 @@
             </div>
         </div>
     </footer>
-    
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -2701,157 +2588,12 @@
                 }
             }
             
-            // Map functionality
-            const mapPopup = document.getElementById('mapPopup');
+            // Map functionality - redirect to maping.html
             const mapBtn = document.getElementById('mapBtn');
-            const closeMap = document.getElementById('closeMap');
-            const worldMap = document.getElementById('world-map');
-            const mapSatelliteBtn = document.getElementById('mapSatellite');
-            const mapTerrainBtn = document.getElementById('mapTerrain');
-            const mapStandardBtn = document.getElementById('mapStandard');
-            const locationInfo = document.getElementById('locationInfo');
-            const mapLoading = document.getElementById('mapLoading');
-            const mapError = document.getElementById('mapError');
-            
-            let map;
-            let currentLayer = 'street';
-            let routingControl;
             
             mapBtn.addEventListener('click', function() {
-                mapPopup.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                initMap();
+                window.location.href = 'maping.html';
             });
-            
-            closeMap.addEventListener('click', function() {
-                mapPopup.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            });
-            
-            mapPopup.addEventListener('click', function(event) {
-                if (event.target === mapPopup) {
-                    mapPopup.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                }
-            });
-            
-            function initMap() {
-                // Show loading
-                mapLoading.style.display = 'block';
-                locationInfo.style.display = 'none';
-                mapError.style.display = 'none';
-                
-                // Remove existing map if it exists
-                if (map) {
-                    map.remove();
-                }
-                
-                // Initialize the map
-                map = L.map('world-map').setView([20, 0], 2);
-                
-                // Add OpenStreetMap layer
-                const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors',
-                    maxZoom: 18
-                });
-                
-                // Add Satellite layer
-                const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-                    maxZoom: 18
-                });
-                
-                // Add Terrain layer
-                const terrainLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 17,
-                    attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a>'
-                });
-                
-                // Add the default layer
-                streetLayer.addTo(map);
-                
-                // Add scale control
-                L.control.scale().addTo(map);
-                
-                // Add custom controls
-                mapSatelliteBtn.addEventListener('click', function() {
-                    map.removeLayer(streetLayer);
-                    map.removeLayer(terrainLayer);
-                    satelliteLayer.addTo(map);
-                    currentLayer = 'satellite';
-                    setActiveButton(this);
-                });
-                
-                mapTerrainBtn.addEventListener('click', function() {
-                    map.removeLayer(streetLayer);
-                    map.removeLayer(satelliteLayer);
-                    terrainLayer.addTo(map);
-                    currentLayer = 'terrain';
-                    setActiveButton(this);
-                });
-                
-                mapStandardBtn.addEventListener('click', function() {
-                    map.removeLayer(satelliteLayer);
-                    map.removeLayer(terrainLayer);
-                    streetLayer.addTo(map);
-                    currentLayer = 'street';
-                    setActiveButton(this);
-                });
-                
-                // Add some sample markers for popular locations
-                const popularLocations = [
-                    { name: "Taj Mahal", lat: 27.1751, lon: 78.0421 },
-                    { name: "Eiffel Tower", lat: 48.8584, lon: 2.2945 },
-                    { name: "Statue of Liberty", lat: 40.6892, lon: -74.0445 },
-                    { name: "Great Wall of China", lat: 40.4319, lon: 116.5704 },
-                    { name: "Pyramids of Giza", lat: 29.9792, lon: 31.1342 },
-                    { name: "Sydney Opera House", lat: -33.8568, lon: 151.2153 },
-                    { name: "Colosseum", lat: 41.8902, lon: 12.4922 },
-                    { name: "Machu Picchu", lat: -13.1631, lon: -72.5450 }
-                ];
-                
-                // Create custom icon
-                const customIcon = L.divIcon({
-                    html: '<i class="fas fa-map-marker-alt" style="color: #ea4335; font-size: 24px;"></i>',
-                    className: 'custom-div-icon',
-                    iconSize: [24, 24],
-                    iconAnchor: [12, 24]
-                });
-                
-                // Add markers for popular locations
-                popularLocations.forEach(location => {
-                    L.marker([location.lat, location.lon], { icon: customIcon })
-                        .addTo(map)
-                        .bindPopup(`<b>${location.name}</b><br>One of the world's most famous landmarks.`)
-                        .openPopup();
-                });
-                
-                // Add routing control
-                routingControl = L.Routing.control({
-                    waypoints: [
-                        L.latLng(28.7041, 77.1025), // Delhi
-                        L.latLng(19.0760, 72.8777)  // Mumbai
-                    ],
-                    routeWhileDragging: true,
-                    lineOptions: {
-                        styles: [{color: '#1a73e8', weight: 5}]
-                    },
-                    createMarker: function() { return null; } // Remove default markers
-                }).addTo(map);
-                
-                // Hide loading and show location info
-                setTimeout(() => {
-                    mapLoading.style.display = 'none';
-                    locationInfo.style.display = 'block';
-                }, 1000);
-            }
-            
-            function setActiveButton(activeButton) {
-                document.querySelectorAll('.map-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                activeButton.classList.add('active');
-            }
             
             // Settings functionality
             const settingsPopup = document.getElementById('settingsPopup');

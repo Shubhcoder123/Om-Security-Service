@@ -1,0 +1,2207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M Maps</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d5bc2;
+            --primary-light: #e8f0fe;
+            --secondary: #34a853;
+            --danger: #ea4335;
+            --warning: #fbbc04;
+            --dark: #202124;
+            --light: #ffffff;
+            --gray: #5f6368;
+            --border-radius: 12px;
+            --shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        body {
+            background: var(--light);
+            color: var(--dark);
+            max-width: 480px;
+            margin: 0 auto;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .map-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+            background: #f8f9fa;
+        }
+        
+        /* Minimal Header */
+        .map-header {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: var(--transition);
+        }
+        
+        .profile-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+        
+        .profile-btn:hover {
+            background: #f8f9fa;
+            transform: scale(1.05);
+        }
+        
+        .search-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 44px 12px 16px;
+            border: none;
+            border-radius: 24px;
+            font-size: 16px;
+            outline: none;
+            background: white;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+        
+        .search-input:focus {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .search-icon:hover {
+            color: var(--primary);
+        }
+        
+        /* Enhanced Suggestions */
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1001;
+            display: none;
+            max-height: 240px;
+            overflow-y: auto;
+            animation: slideDown 0.2s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .suggestion-item {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: var(--transition);
+        }
+        
+        .suggestion-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .suggestion-icon {
+            color: var(--gray);
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .suggestion-text {
+            flex: 1;
+        }
+        
+        .suggestion-title {
+            font-weight: 500;
+            margin-bottom: 2px;
+            font-size: 14px;
+        }
+        
+        .suggestion-subtitle {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        /* Modern Bottom Cards */
+        .bottom-cards {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 16px;
+            z-index: 1000;
+        }
+        
+        .map-card {
+            width: 110px;
+            padding: 16px;
+            background: white;
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .map-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .map-card.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .map-card.active .card-icon {
+            color: white;
+        }
+        
+        .card-icon {
+            font-size: 24px;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+        
+        .card-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        /* Live Location Button */
+        .live-location-btn {
+            position: absolute;
+            right: 20px;
+            bottom: 90px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--dark);
+            transition: var(--transition);
+            z-index: 1000;
+        }
+        
+        .live-location-btn:hover {
+            background: #f8f9fa;
+            transform: scale(1.05);
+        }
+        
+        .live-location-btn.active {
+            color: var(--primary);
+        }
+        
+        /* Enhanced Bottom Sheet */
+        .bottom-sheet {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 85vh;
+            overflow: hidden;
+        }
+        
+        .bottom-sheet.expanded {
+            transform: translateY(0);
+        }
+        
+        .sheet-header {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sheet-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .close-sheet {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--gray);
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        .close-sheet:hover {
+            background: #f5f5f5;
+        }
+        
+        .sheet-content {
+            padding: 20px;
+            max-height: calc(85vh - 80px);
+            overflow-y: auto;
+        }
+        
+        /* Route Panel */
+        .route-panel {
+            display: none;
+        }
+        
+        .route-panel.active {
+            display: block;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .location-input {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            transition: var(--transition);
+            background: white;
+        }
+        
+        .location-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+        
+        .route-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 16px;
+        }
+        
+        .primary-btn {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .primary-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .secondary-btn {
+            background: #f8f9fa;
+            color: var(--dark);
+            border: 1px solid #e0e0e0;
+        }
+        
+        .secondary-btn:hover {
+            background: #e8eaed;
+            transform: translateY(-2px);
+        }
+        
+        /* Travel Mode Cards */
+        .travel-modes {
+            display: flex;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .travel-mode-card {
+            flex: 1;
+            padding: 20px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+        
+        .travel-mode-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .travel-mode-card.active {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        
+        .travel-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+        
+        .travel-mode-card.active .travel-icon {
+            color: var(--primary);
+        }
+        
+        .travel-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        /* Distance Indicator */
+        .distance-indicator {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 20px 28px;
+            border-radius: 20px;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            display: none;
+            animation: bounceIn 0.5s ease-out;
+            min-width: 220px;
+            text-align: center;
+        }
+        
+        .distance-indicator.show {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .distance-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .distance-time {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .travel-animation {
+            position: absolute;
+            top: -35px;
+            font-size: 28px;
+            animation: move 2s linear infinite;
+        }
+        
+        @keyframes move {
+            0% { transform: translateX(-20px) rotateY(0deg); }
+            25% { transform: translateX(0px) rotateY(0deg); }
+            50% { transform: translateX(20px) rotateY(180deg); }
+            75% { transform: translateX(0px) rotateY(180deg); }
+            100% { transform: translateX(-20px) rotateY(0deg); }
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: translateX(-50%) scale(0.3); opacity: 0; }
+            50% { transform: translateX(-50%) scale(1.05); }
+            70% { transform: translateX(-50%) scale(0.9); }
+            100% { transform: translateX(-50%) scale(1); opacity: 1; }
+        }
+        
+        /* Enhanced User Profile Panel */
+        .profile-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 2000;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .profile-panel.active {
+            transform: translateX(0);
+        }
+        
+        .profile-header {
+            padding: 24px 20px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .profile-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            align-self: flex-end;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        .profile-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .profile-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .profile-details h2 {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        
+        .profile-details p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        .profile-menu {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+        
+        .menu-item {
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .menu-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .menu-icon {
+            width: 24px;
+            text-align: center;
+            color: var(--gray);
+        }
+        
+        .menu-text {
+            flex: 1;
+            font-weight: 500;
+            font-size: 16px;
+        }
+        
+        .menu-arrow {
+            color: var(--gray);
+        }
+        
+        /* Enhanced Notification */
+        .notification {
+            position: absolute;
+            top: 80px;
+            left: 16px;
+            right: 16px;
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(-100px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .notification-message {
+            flex: 1;
+            font-size: 14px;
+        }
+        
+        .close-notification {
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+        }
+        
+        /* Enhanced POI Popup */
+        .poi-popup {
+            min-width: 220px;
+        }
+        
+        .poi-popup-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .poi-popup-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .poi-popup-title {
+            font-weight: 500;
+            font-size: 16px;
+        }
+        
+        .poi-popup-address {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 16px;
+        }
+        
+        .poi-popup-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .poi-popup-btn {
+            flex: 1;
+            padding: 10px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .poi-popup-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .poi-popup-btn.secondary {
+            background: #f1f3f4;
+            color: var(--dark);
+        }
+        
+        .poi-popup-btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        /* Leaflet customizations */
+        .leaflet-container {
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+        
+        .leaflet-popup-content {
+            margin: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .leaflet-control-zoom {
+            border: none !important;
+            border-radius: 8px !important;
+            overflow: hidden;
+            box-shadow: var(--shadow) !important;
+        }
+        
+        .leaflet-control-zoom a {
+            width: 44px !important;
+            height: 44px !important;
+            line-height: 44px !important;
+            border-radius: 0 !important;
+            font-size: 18px !important;
+            color: var(--dark) !important;
+            transition: var(--transition) !important;
+        }
+        
+        .leaflet-control-zoom a:hover {
+            background: #f8f9fa !important;
+        }
+        
+        .leaflet-control-zoom-in {
+            border-bottom: 1px solid #f0f0e0 !important;
+        }
+        
+        .leaflet-control-attribution {
+            background: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(4px);
+            border-radius: 8px !important;
+            margin: 0 0 8px 8px !important;
+            padding: 4px 8px !important;
+            font-size: 10px !important;
+        }
+        
+        /* Street Labels for Satellite View */
+        .street-labels {
+            position: absolute;
+            z-index: 400;
+            pointer-events: none;
+        }
+        
+        .street-label {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            color: #333;
+            white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        
+        /* Route Result */
+        .route-result {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .route-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .route-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .route-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .route-summary {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .route-metric {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .metric-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 4px;
+        }
+        
+        .route-steps {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 16px;
+        }
+        
+        .step {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .step:last-child {
+            border-bottom: none;
+        }
+        
+        .step-icon {
+            color: var(--primary);
+            font-size: 12px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            flex: 1;
+        }
+        
+        /* Loading Spinner */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+        }
+        
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="map-container">
+        <div id="map"></div>
+        
+        <!-- Minimal Header -->
+        <div class="map-header">
+            <button class="profile-btn" id="profileBtn" title="Profile">
+                <i class="fas fa-user"></i>
+            </button>
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search">
+                <button class="search-icon" id="searchBtn">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="suggestions" id="suggestions"></div>
+            </div>
+        </div>
+        
+        <!-- Modern Bottom Cards -->
+        <div class="bottom-cards">
+            <div class="map-card active" id="mapCard" data-layer="streets">
+                <div class="card-icon">
+                    <i class="fas fa-map"></i>
+                </div>
+                <div class="card-text">Map</div>
+            </div>
+            <div class="map-card" id="satelliteCard" data-layer="satellite">
+                <div class="card-icon">
+                    <i class="fas fa-satellite"></i>
+                </div>
+                <div class="card-text">Satellite</div>
+            </div>
+            <div class="map-card" id="routeCard">
+                <div class="card-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+                <div class="card-text">Directions</div>
+            </div>
+        </div>
+        
+        <!-- Live Location Button -->
+        <button class="live-location-btn" id="locateBtn" title="My Location">
+            <i class="fas fa-location-arrow"></i>
+        </button>
+        
+        <!-- Enhanced Bottom Sheet -->
+        <div class="bottom-sheet" id="bottomSheet">
+            <div class="sheet-header">
+                <div class="sheet-title">Get Directions</div>
+                <button class="close-sheet" id="closeSheet">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="sheet-content">
+                <div class="route-panel" id="routePanel">
+                    <div class="input-group">
+                        <input type="text" class="location-input" id="startInput" placeholder="Current location" value="Current Location">
+                        <div class="suggestions" id="startSuggestions"></div>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" class="location-input" id="endInput" placeholder="Choose destination">
+                        <div class="suggestions" id="endSuggestions"></div>
+                    </div>
+                    
+                    <!-- Travel Mode Cards -->
+                    <div class="travel-modes">
+                        <div class="travel-mode-card active" data-mode="driving-car">
+                            <div class="travel-icon">
+                                <i class="fas fa-car-side"></i>
+                            </div>
+                            <div class="travel-name">Drive</div>
+                        </div>
+                        <div class="travel-mode-card" data-mode="cycling-regular">
+                            <div class="travel-icon">
+                                <i class="fas fa-bicycle"></i>
+                            </div>
+                            <div class="travel-name">Bike</div>
+                        </div>
+                        <div class="travel-mode-card" data-mode="foot-walking">
+                            <div class="travel-icon">
+                                <i class="fas fa-walking"></i>
+                            </div>
+                            <div class="travel-name">Walk</div>
+                        </div>
+                    </div>
+                    
+                    <div class="route-actions">
+                        <button class="action-btn secondary-btn" id="clearRoute">Clear</button>
+                        <button class="action-btn primary-btn" id="getRoute">Get Route</button>
+                    </div>
+                    <div class="route-result" id="routeResult">
+                        <!-- Route cards will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Distance Indicator -->
+        <div class="distance-indicator" id="distanceIndicator">
+            <div class="travel-animation" id="travelAnimation">
+                <i class="fas fa-car-side"></i>
+            </div>
+            <div class="distance-value" id="distanceValue">0 km</div>
+            <div class="distance-time" id="distanceTime">0 min</div>
+        </div>
+        
+        <!-- Enhanced Notification -->
+        <div class="notification" id="notification">
+            <div class="notification-icon">
+                <i class="fas fa-info"></i>
+            </div>
+            <div class="notification-message" id="notificationMessage">Notification message</div>
+            <button class="close-notification" id="closeNotification">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- Enhanced Profile Panel -->
+        <div class="profile-panel" id="profilePanel">
+            <div class="profile-header">
+                <button class="profile-close" id="profileClose">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="profile-info">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-details">
+                        <h2 id="userName">Guest User</h2>
+                        <p id="userEmail">guest@example.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-menu">
+                <div class="menu-item" id="loginBtn">
+                    <div class="menu-icon">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </div>
+                    <div class="menu-text">Login / Sign Up</div>
+                    <div class="menu-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="menu-text">Settings</div>
+                    <div class="menu-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <div class="menu-text">Help & Support</div>
+                    <div class="menu-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="menu-text">About M Maps</div>
+                    <div class="menu-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Street Labels Container -->
+        <div class="street-labels" id="streetLabels"></div>
+    </div>
+
+    <!-- Leaflet and Routing Libraries -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize variables
+            let map;
+            let currentLocation = { lat: 28.6139, lng: 77.2090 }; // Default to Delhi
+            let routeMode = false;
+            let routingControl = null;
+            let currentMarker = null;
+            let locationWatchId = null;
+            let poiMarkers = [];
+            let activeLayer = 'streets';
+            let isFollowingLocation = false;
+            let currentTravelMode = 'driving-car';
+            let currentRouteData = null;
+            let routeLine = null;
+            let streetLabels = [];
+            let selectedLocationMarker = null;
+            
+            // OpenRouteService API Key
+            const ORS_API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImRjOWUyODI1NmZlYTQwODA4ZTlkOGQzN2RiNDU0ZWVhIiwiaCI6Im11cm11cjY0In0=';
+            
+            // Map layers
+            const layers = {
+                streets: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }),
+                satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                })
+            };
+            
+            // Initialize the map
+            function initMap() {
+                map = L.map('map', {
+                    center: [currentLocation.lat, currentLocation.lng],
+                    zoom: 13,
+                    zoomControl: false
+                });
+                
+                // Add default layer
+                layers.streets.addTo(map);
+                
+                // Add zoom control
+                L.control.zoom({
+                    position: 'bottomright'
+                }).addTo(map);
+                
+                // Add scale control
+                L.control.scale({
+                    imperial: false,
+                    position: 'bottomleft'
+                }).addTo(map);
+                
+                // Add attribution
+                L.control.attribution({
+                    position: 'bottomright'
+                }).addTo(map);
+                
+                // Try to get user's current location
+                getCurrentLocation();
+                
+                // Start watching location
+                startWatchingLocation();
+                
+                // Add some sample POIs
+                addSamplePOIs();
+                
+                // Add street labels for satellite view
+                addStreetLabels();
+            }
+            
+            // Get user's current location
+            function getCurrentLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            currentLocation = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            };
+                            
+                            // Update map center with smooth animation
+                            map.flyTo([currentLocation.lat, currentLocation.lng], 15, {
+                                duration: 1.5,
+                                easeLinearity: 0.25
+                            });
+                            
+                            // Add user location marker
+                            updateUserLocationMarker();
+                            
+                            // Update location name
+                            updateLocationName();
+                            
+                            // Show notification
+                            showNotification('Your current location has been detected');
+                        },
+                        function(error) {
+                            console.error('Error getting location:', error);
+                            showNotification('Could not get your location. Using default location.');
+                        }
+                    );
+                } else {
+                    showNotification('Geolocation is not supported by this browser.');
+                }
+            }
+            
+            // Start watching location for live updates
+            function startWatchingLocation() {
+                if (navigator.geolocation) {
+                    locationWatchId = navigator.geolocation.watchPosition(
+                        function(position) {
+                            currentLocation = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            };
+                            
+                            // Smoothly update map center if user is moving and following is enabled
+                            if (isFollowingLocation) {
+                                map.panTo([currentLocation.lat, currentLocation.lng], {
+                                    animate: true,
+                                    duration: 1.0
+                                });
+                            }
+                            
+                            // Update user location marker
+                            updateUserLocationMarker();
+                            
+                            // Update location name
+                            updateLocationName();
+                            
+                            // Update distance indicator if route is active
+                            if (routeMode && currentRouteData) {
+                                updateDistanceToDestination();
+                            }
+                        },
+                        function(error) {
+                            console.error('Error watching location:', error);
+                        },
+                        {
+                            enableHighAccuracy: true,
+                            timeout: 10000,
+                            maximumAge: 1000
+                        }
+                    );
+                }
+            }
+            
+            // Update user location marker
+            function updateUserLocationMarker() {
+                if (currentMarker) {
+                    // Smoothly move the marker to new position
+                    currentMarker.setLatLng([currentLocation.lat, currentLocation.lng]);
+                } else {
+                    // Create new marker
+                    currentMarker = L.marker([currentLocation.lat, currentLocation.lng], {
+                        icon: L.divIcon({
+                            className: 'user-location-marker',
+                            html: '<div style="background:#1a73e8;border-radius:50%;width:12px;height:12px;border:3px solid white;box-shadow:0 0 0 3px rgba(26,115,232,0.4)"></div>',
+                            iconSize: [18, 18],
+                            iconAnchor: [9, 9]
+                        })
+                    }).addTo(map);
+                }
+            }
+            
+            // Update location name using reverse geocoding
+            async function updateLocationName() {
+                try {
+                    const response = await fetch(
+                        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${currentLocation.lat}&lon=${currentLocation.lng}&zoom=18&addressdetails=1`
+                    );
+                    
+                    if (!response.ok) {
+                        throw new Error('Reverse geocoding failed');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data.display_name) {
+                        document.getElementById('startInput').value = data.display_name.split(',')[0] + ', ' + data.display_name.split(',')[1];
+                    }
+                } catch (error) {
+                    console.error('Error reverse geocoding:', error);
+                    // Fallback to sample data
+                    const locationNames = [
+                        "Connaught Place, New Delhi",
+                        "India Gate, New Delhi",
+                        "Rajpath, New Delhi",
+                        "Parliament Street, New Delhi"
+                    ];
+                    
+                    const randomName = locationNames[Math.floor(Math.random() * locationNames.length)];
+                    document.getElementById('startInput').value = randomName;
+                }
+            }
+            
+            // Add sample Points of Interest
+            function addSamplePOIs() {
+                const pois = [
+                    { lat: 28.6139, lng: 77.2090, type: 'restaurant', name: 'Taj Restaurant', address: 'Connaught Place, New Delhi' },
+                    { lat: 28.6129, lng: 77.2295, type: 'hospital', name: 'City Hospital', address: 'Rajpath, New Delhi' },
+                    { lat: 28.6249, lng: 77.2195, type: 'gas', name: 'Fuel Station', address: 'Red Fort Road, Delhi' },
+                    { lat: 28.6219, lng: 77.2395, type: 'shopping', name: 'Mall of Delhi', address: 'Lotus Temple Road, Delhi' },
+                    { lat: 28.6039, lng: 77.2495, type: 'bank', name: 'Central Bank', address: 'Qutub Minar Road, Delhi' }
+                ];
+                
+                const poiIcons = {
+                    restaurant: 'fa-utensils',
+                    hospital: 'fa-hospital',
+                    gas: 'fa-gas-pump',
+                    shopping: 'fa-shopping-bag',
+                    bank: 'fa-university'
+                };
+                
+                pois.forEach(poi => {
+                    const marker = L.marker([poi.lat, poi.lng], {
+                        icon: L.divIcon({
+                            className: 'poi-marker',
+                            html: `<div style="background:#1a73e8;border-radius:50%;width:16px;height:16px;border:3px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;color:white;font-size:8px"><i class="fas ${poiIcons[poi.type]}"></i></div>`,
+                            iconSize: [22, 22],
+                            iconAnchor: [11, 11]
+                        })
+                    }).addTo(map);
+                    
+                    marker.bindPopup(`
+                        <div class="poi-popup">
+                            <div class="poi-popup-header">
+                                <div class="poi-popup-icon">
+                                    <i class="fas ${poiIcons[poi.type]}"></i>
+                                </div>
+                                <div class="poi-popup-title">${poi.name}</div>
+                            </div>
+                            <div class="poi-popup-address">${poi.address}</div>
+                            <div class="poi-popup-actions">
+                                <button class="poi-popup-btn secondary view-360-btn" data-lat="${poi.lat}" data-lng="${poi.lng}">
+                                    <i class="fas fa-street-view"></i> 360° View
+                                </button>
+                                <button class="poi-popup-btn primary route-to-btn" data-lat="${poi.lat}" data-lng="${poi.lng}" data-name="${poi.name}">
+                                    <i class="fas fa-route"></i> Directions
+                                </button>
+                            </div>
+                        </div>
+                    `);
+                    
+                    poiMarkers.push(marker);
+                });
+            }
+            
+            // Add street labels for satellite view
+            function addStreetLabels() {
+                const streetNames = [
+                    { name: "Rajpath", lat: 28.6139, lng: 77.2195 },
+                    { name: "Connaught Place", lat: 28.6329, lng: 77.2195 },
+                    { name: "India Gate", lat: 28.6129, lng: 77.2295 },
+                    { name: "Janpath", lat: 28.6249, lng: 77.2195 },
+                    { name: "Parliament Street", lat: 28.6175, lng: 77.2085 },
+                    { name: "Barakhamba Road", lat: 28.6299, lng: 77.2285 },
+                    { name: "Kasturba Gandhi Marg", lat: 28.6279, lng: 77.2185 },
+                    { name: "Ashoka Road", lat: 28.6229, lng: 77.2085 },
+                    { name: "Sansad Marg", lat: 28.6199, lng: 77.2185 },
+                    { name: "Tolstoy Marg", lat: 28.6259, lng: 77.2285 }
+                ];
+                
+                streetNames.forEach(street => {
+                    const label = document.createElement('div');
+                    label.className = 'street-label';
+                    label.textContent = street.name;
+                    label.style.left = '50%';
+                    label.style.top = '50%';
+                    
+                    document.getElementById('streetLabels').appendChild(label);
+                    
+                    // Position the label on the map
+                    const updateLabelPosition = () => {
+                        const point = map.latLngToContainerPoint([street.lat, street.lng]);
+                        label.style.transform = `translate(${point.x}px, ${point.y}px)`;
+                    };
+                    
+                    updateLabelPosition();
+                    map.on('moveend', updateLabelPosition);
+                    map.on('zoomend', updateLabelPosition);
+                    
+                    streetLabels.push({
+                        element: label,
+                        lat: street.lat,
+                        lng: street.lng
+                    });
+                });
+            }
+            
+            // Show notification
+            function showNotification(message) {
+                const notification = document.getElementById('notification');
+                const notificationMessage = document.getElementById('notificationMessage');
+                
+                notificationMessage.textContent = message;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+            
+            // Toggle bottom sheet
+            function toggleBottomSheet(show) {
+                const bottomSheet = document.getElementById('bottomSheet');
+                
+                if (show) {
+                    bottomSheet.classList.add('expanded');
+                } else {
+                    bottomSheet.classList.remove('expanded');
+                }
+            }
+            
+            // Toggle profile panel
+            function toggleProfilePanel(show) {
+                const profilePanel = document.getElementById('profilePanel');
+                
+                if (show) {
+                    profilePanel.classList.add('active');
+                } else {
+                    profilePanel.classList.remove('active');
+                }
+            }
+            
+            // Change map layer
+            function changeMapLayer(layerName) {
+                // Remove current layer
+                Object.values(layers).forEach(layer => {
+                    if (map.hasLayer(layer)) {
+                        map.removeLayer(layer);
+                    }
+                });
+                
+                // Add new layer
+                layers[layerName].addTo(map);
+                activeLayer = layerName;
+                
+                // Update card UI
+                document.querySelectorAll('.map-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                if (layerName === 'streets') {
+                    document.getElementById('mapCard').classList.add('active');
+                } else {
+                    document.getElementById('satelliteCard').classList.add('active');
+                }
+                
+                // Show/hide street labels based on layer
+                const streetLabelsContainer = document.getElementById('streetLabels');
+                if (layerName === 'satellite') {
+                    streetLabelsContainer.style.display = 'block';
+                } else {
+                    streetLabelsContainer.style.display = 'none';
+                }
+                
+                showNotification(`${layerName === 'streets' ? 'Map' : 'Satellite'} view activated`);
+            }
+            
+            // Search for locations using Nominatim (OpenStreetMap)
+            async function searchLocations(query) {
+                if (query.length < 2) {
+                    return [];
+                }
+                
+                try {
+                    const response = await fetch(
+                        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1`
+                    );
+                    
+                    if (!response.ok) {
+                        throw new Error('Search failed');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data && data.length > 0) {
+                        return data.map(item => ({
+                            name: item.display_name,
+                            lat: parseFloat(item.lat),
+                            lng: parseFloat(item.lon),
+                            type: item.type,
+                            class: item.class
+                        }));
+                    } else {
+                        return [];
+                    }
+                } catch (error) {
+                    console.error('Error searching locations:', error);
+                    return [];
+                }
+            }
+            
+            // Show location suggestions
+            async function showSuggestions(inputElement, suggestionsId) {
+                const query = inputElement.value;
+                if (query.length < 2) {
+                    document.getElementById(suggestionsId).style.display = 'none';
+                    return;
+                }
+                
+                const suggestions = await searchLocations(query);
+                const suggestionsContainer = document.getElementById(suggestionsId);
+                
+                if (suggestions.length === 0) {
+                    suggestionsContainer.innerHTML = `
+                        <div class="suggestion-item">
+                            <div class="suggestion-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="suggestion-text">
+                                <div class="suggestion-title">No results found</div>
+                                <div class="suggestion-subtitle">Try a different search term</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    suggestionsContainer.innerHTML = suggestions.map(suggestion => `
+                        <div class="suggestion-item" data-name="${suggestion.name}" data-lat="${suggestion.lat}" data-lng="${suggestion.lng}">
+                            <div class="suggestion-icon">
+                                <i class="fas fa-${getSuggestionIcon(suggestion.class)}"></i>
+                            </div>
+                            <div class="suggestion-text">
+                                <div class="suggestion-title">${suggestion.name.split(',')[0]}</div>
+                                <div class="suggestion-subtitle">${suggestion.name.split(',').slice(1).join(',')}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                
+                suggestionsContainer.style.display = 'block';
+                
+                // Add click event to suggestions
+                suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const name = item.dataset.name;
+                        const lat = parseFloat(item.dataset.lat);
+                        const lng = parseFloat(item.dataset.lng);
+                        
+                        inputElement.value = name;
+                        suggestionsContainer.style.display = 'none';
+                        
+                        // Animate map to the selected location
+                        animateToLocation(lat, lng, name);
+                    });
+                });
+            }
+            
+            // Get appropriate icon for suggestion type
+            function getSuggestionIcon(type) {
+                const iconMap = {
+                    'amenity': 'map-marker-alt',
+                    'building': 'building',
+                    'shop': 'shopping-bag',
+                    'tourism': 'camera',
+                    'leisure': 'tree',
+                    'natural': 'mountain',
+                    'place': 'map-pin',
+                    'highway': 'road',
+                    'railway': 'train',
+                    'aeroway': 'plane',
+                    'waterway': 'water',
+                    'landuse': 'map'
+                };
+                
+                return iconMap[type] || 'map-marker-alt';
+            }
+            
+            // Animate map to a specific location
+            function animateToLocation(lat, lng, name) {
+                // Remove previous selected location marker
+                if (selectedLocationMarker) {
+                    map.removeLayer(selectedLocationMarker);
+                }
+                
+                // Add a marker for the selected location
+                selectedLocationMarker = L.marker([lat, lng], {
+                    icon: L.divIcon({
+                        className: 'destination-marker',
+                        html: '<div style="background:#ea4335;width:16px;height:16px;border-radius:50% 50% 50% 0;transform:rotate(45deg);border:3px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.3)"></div>',
+                        iconSize: [22, 22],
+                        iconAnchor: [11, 22]
+                    })
+                }).addTo(map).bindPopup(`
+                    <div style="font-weight: 500; margin-bottom: 5px;">${name.split(',')[0]}</div>
+                    <div style="font-size: 12px; color: #666;">${name.split(',').slice(1).join(',')}</div>
+                `).openPopup();
+                
+                // Animate the map to the location with a smooth fly animation
+                map.flyTo([lat, lng], 16, {
+                    duration: 1.5,
+                    easeLinearity: 0.25
+                });
+                
+                showNotification(`Navigating to ${name.split(',')[0]}`);
+            }
+            
+            // Calculate route using OpenRouteService API
+            async function calculateRoute(start, end) {
+                showNotification('Calculating route...');
+                
+                // Show loading
+                const routeResult = document.getElementById('routeResult');
+                routeResult.innerHTML = `
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <div>Calculating best route...</div>
+                    </div>
+                `;
+                routeResult.style.display = 'block';
+                
+                try {
+                    // Convert location names to coordinates
+                    const startCoords = await geocodeLocation(start);
+                    const endCoords = await geocodeLocation(end);
+                    
+                    if (!startCoords || !endCoords) {
+                        showNotification('Could not find locations. Please try again.');
+                        return;
+                    }
+                    
+                    // Make API request to OpenRouteService
+                    const response = await fetch(
+                        `https://api.openrouteservice.org/v2/directions/${currentTravelMode}?api_key=${ORS_API_KEY}&start=${startCoords.lng},${startCoords.lat}&end=${endCoords.lng},${endCoords.lat}`
+                    );
+                    
+                    if (!response.ok) {
+                        throw new Error('Route calculation failed');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // Process and display route
+                    displayRoute(data);
+                    
+                } catch (error) {
+                    console.error('Error calculating route:', error);
+                    showNotification('Error calculating route. Please try again.');
+                    
+                    // Fallback to demo route
+                    displayDemoRoute();
+                }
+            }
+            
+            // Geocode location using Nominatim
+            async function geocodeLocation(locationName) {
+                // If it's "Current Location", return current coordinates
+                if (locationName.toLowerCase().includes('current location')) {
+                    return { lat: currentLocation.lat, lng: currentLocation.lng };
+                }
+                
+                try {
+                    const response = await fetch(
+                        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationName)}&limit=1`
+                    );
+                    
+                    if (!response.ok) {
+                        throw new Error('Geocoding failed');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data && data.length > 0) {
+                        return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+                    } else {
+                        return null;
+                    }
+                } catch (error) {
+                    console.error('Error geocoding location:', error);
+                    return null;
+                }
+            }
+            
+            // Display route from OpenRouteService response
+            function displayRoute(routeData) {
+                const routeResult = document.getElementById('routeResult');
+                
+                if (!routeData.features || routeData.features.length === 0) {
+                    showNotification('No route found for the given locations');
+                    return;
+                }
+                
+                const route = routeData.features[0];
+                const properties = route.properties;
+                const segments = properties.segments[0];
+                
+                // Store route data for distance calculation
+                currentRouteData = routeData;
+                
+                // Format distance and duration
+                const distance = (segments.distance / 1000).toFixed(1) + ' km';
+                const duration = formatDuration(segments.duration);
+                
+                // Create route card
+                routeResult.innerHTML = `
+                    <div class="route-card">
+                        <div class="route-card-header">
+                            <h3>Recommended Route</h3>
+                            <div class="route-type">${getTravelModeName(currentTravelMode)}</div>
+                        </div>
+                        <div class="route-summary">
+                            <div class="route-metric">
+                                <div class="metric-value">${distance}</div>
+                                <div class="metric-label">Distance</div>
+                            </div>
+                            <div class="route-metric">
+                                <div class="metric-value">${duration}</div>
+                                <div class="metric-label">Duration</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Draw route on map
+                drawRouteOnMap(route);
+                
+                // Show distance indicator with correct animation
+                updateDistanceIndicator(segments.distance, segments.duration);
+                
+                // Hide search box when route is set
+                document.querySelector('.map-header').style.display = 'none';
+                
+                showNotification('Route calculated successfully');
+                routeMode = true;
+                
+                // Close bottom sheet
+                toggleBottomSheet(false);
+            }
+            
+            // Get travel mode name for display
+            function getTravelModeName(mode) {
+                const modeNames = {
+                    'driving-car': 'Driving',
+                    'foot-walking': 'Walking',
+                    'cycling-regular': 'Biking'
+                };
+                return modeNames[mode] || 'Driving';
+            }
+            
+            // Format duration from seconds to hours and minutes
+            function formatDuration(seconds) {
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                
+                if (hours > 0) {
+                    return `${hours}h ${minutes}m`;
+                } else {
+                    return `${minutes}m`;
+                }
+            }
+            
+            // Draw route on the map
+            function drawRouteOnMap(route) {
+                // Clear existing route if any
+                if (routingControl) {
+                    map.removeControl(routingControl);
+                }
+                
+                if (routeLine) {
+                    map.removeLayer(routeLine);
+                }
+                
+                // Extract coordinates from the route
+                const coordinates = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+                
+                // Create a polyline for the route
+                routeLine = L.polyline(coordinates, {
+                    color: '#1a73e8',
+                    weight: 5,
+                    opacity: 0.8,
+                    lineJoin: 'round'
+                }).addTo(map);
+                
+                // Fit map to show the entire route
+                map.fitBounds(routeLine.getBounds(), { padding: [20, 20] });
+            }
+            
+            // Update distance indicator with correct animation
+            function updateDistanceIndicator(distance, duration) {
+                const distanceValue = document.getElementById('distanceValue');
+                const distanceTime = document.getElementById('distanceTime');
+                const travelAnimation = document.getElementById('travelAnimation');
+                
+                // Set distance and time
+                distanceValue.textContent = (distance / 1000).toFixed(1) + ' km';
+                distanceTime.textContent = formatDuration(duration);
+                
+                // Set animation based on travel mode
+                let animationIcon = 'fas fa-car-side';
+                if (currentTravelMode === 'foot-walking') {
+                    animationIcon = 'fas fa-walking';
+                } else if (currentTravelMode === 'cycling-regular') {
+                    animationIcon = 'fas fa-bicycle';
+                }
+                
+                travelAnimation.innerHTML = `<i class="${animationIcon}"></i>`;
+                
+                // Show the indicator
+                document.getElementById('distanceIndicator').classList.add('show');
+            }
+            
+            // Update distance to destination in real-time
+            function updateDistanceToDestination() {
+                if (!currentRouteData || !currentRouteData.features || !currentRouteData.features[0]) return;
+                
+                const route = currentRouteData.features[0];
+                const coordinates = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+                
+                // Find the closest point on the route to current location
+                let minDistance = Infinity;
+                let closestPointIndex = 0;
+                
+                for (let i = 0; i < coordinates.length - 1; i++) {
+                    const segmentStart = coordinates[i];
+                    const segmentEnd = coordinates[i + 1];
+                    
+                    // Calculate distance from current location to this segment
+                    const distance = distanceToSegment(
+                        { lat: currentLocation.lat, lng: currentLocation.lng },
+                        { lat: segmentStart[0], lng: segmentStart[1] },
+                        { lat: segmentEnd[0], lng: segmentEnd[1] }
+                    );
+                    
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestPointIndex = i;
+                    }
+                }
+                
+                // Calculate remaining distance along the route
+                let remainingDistance = 0;
+                for (let i = closestPointIndex; i < coordinates.length - 1; i++) {
+                    const segmentStart = coordinates[i];
+                    const segmentEnd = coordinates[i + 1];
+                    
+                    remainingDistance += calculateDistance(
+                        segmentStart[0], segmentStart[1],
+                        segmentEnd[0], segmentEnd[1]
+                    );
+                }
+                
+                // Calculate remaining time based on travel mode
+                let speed = 50; // km/h for driving
+                if (currentTravelMode === 'foot-walking') {
+                    speed = 5; // km/h for walking
+                } else if (currentTravelMode === 'cycling-regular') {
+                    speed = 15; // km/h for biking
+                }
+                
+                const remainingTime = (remainingDistance / speed) * 60; // Convert to minutes
+                
+                // Update distance indicator
+                const distanceValue = document.getElementById('distanceValue');
+                const distanceTime = document.getElementById('distanceTime');
+                
+                distanceValue.textContent = (remainingDistance / 1000).toFixed(1) + ' km';
+                distanceTime.textContent = Math.round(remainingTime) + ' min';
+            }
+            
+            // Calculate distance between two points in meters
+            function calculateDistance(lat1, lon1, lat2, lon2) {
+                const R = 6371e3; // Earth radius in meters
+                const φ1 = lat1 * Math.PI / 180;
+                const φ2 = lat2 * Math.PI / 180;
+                const Δφ = (lat2 - lat1) * Math.PI / 180;
+                const Δλ = (lon2 - lon1) * Math.PI / 180;
+                
+                const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                          Math.cos(φ1) * Math.cos(φ2) *
+                          Math.sin(Δλ/2) * Math.sin(Δλ/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                
+                return R * c;
+            }
+            
+            // Calculate distance from point to line segment
+            function distanceToSegment(point, segmentStart, segmentEnd) {
+                const A = point.lng - segmentStart[1];
+                const B = point.lat - segmentStart[0];
+                const C = segmentEnd[1] - segmentStart[1];
+                const D = segmentEnd[0] - segmentStart[0];
+                
+                const dot = A * C + B * D;
+                const lenSq = C * C + D * D;
+                let param = -1;
+                
+                if (lenSq !== 0) {
+                    param = dot / lenSq;
+                }
+                
+                let xx, yy;
+                
+                if (param < 0) {
+                    xx = segmentStart[1];
+                    yy = segmentStart[0];
+                } else if (param > 1) {
+                    xx = segmentEnd[1];
+                    yy = segmentEnd[0];
+                } else {
+                    xx = segmentStart[1] + param * C;
+                    yy = segmentStart[0] + param * D;
+                }
+                
+                const dx = point.lng - xx;
+                const dy = point.lat - yy;
+                
+                return Math.sqrt(dx * dx + dy * dy) * 111320; // Convert to meters (approximate)
+            }
+            
+            // Display demo route (fallback)
+            function displayDemoRoute() {
+                const routeResult = document.getElementById('routeResult');
+                
+                // Calculate demo values based on travel mode
+                let distance = '12.5 km';
+                let duration = '25 min';
+                
+                if (currentTravelMode === 'foot-walking') {
+                    distance = '3.2 km';
+                    duration = '40 min';
+                } else if (currentTravelMode === 'cycling-regular') {
+                    distance = '8.7 km';
+                    duration = '30 min';
+                }
+                
+                routeResult.innerHTML = `
+                    <div class="route-card">
+                        <div class="route-card-header">
+                            <h3>Recommended Route</h3>
+                            <div class="route-type">${getTravelModeName(currentTravelMode)}</div>
+                        </div>
+                        <div class="route-summary">
+                            <div class="route-metric">
+                                <div class="metric-value">${distance}</div>
+                                <div class="metric-label">Distance</div>
+                            </div>
+                            <div class="route-metric">
+                                <div class="metric-value">${duration}</div>
+                                <div class="metric-label">Duration</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Update distance indicator with demo values
+                updateDistanceIndicator(12500, 1500); // 12.5 km, 25 min
+                
+                // Hide search box when route is set
+                document.querySelector('.map-header').style.display = 'none';
+                
+                showNotification('Route calculated successfully');
+                routeMode = true;
+                
+                // Close bottom sheet
+                toggleBottomSheet(false);
+            }
+            
+            // Simulate user login
+            function loginUser() {
+                // In a real app, you would have a proper login flow
+                isLoggedIn = true;
+                userData = {
+                    name: "John Doe",
+                    email: "john.doe@example.com"
+                };
+                
+                document.getElementById('userName').textContent = userData.name;
+                document.getElementById('userEmail').textContent = userData.email;
+                document.getElementById('loginBtn').innerHTML = `
+                    <div class="menu-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <div class="menu-text">Logout</div>
+                    <div class="menu-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                `;
+                
+                showNotification(`Welcome back, ${userData.name}!`);
+                toggleProfilePanel(false);
+            }
+            
+            // Simulate user logout
+            function logoutUser() {
+                isLoggedIn = false;
+                userData = {
+                    name: "Guest User",
+                    email: "guest@example.com"
+                };
+                
+                document.getElementById('userName').textContent = userData.name;
+                document.getElementById('userEmail').textContent = userData.email;
+                document.getElementById('loginBtn').innerHTML = `
+                    <div class="menu-icon">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </div>
+                    <div class="menu-text">Login / Sign Up</div>
+                    <div class="menu-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                `;
+                
+                showNotification('You have been logged out');
+                toggleProfilePanel(false);
+            }
+            
+            // Toggle location following
+            function toggleLocationFollowing() {
+                const locateBtn = document.getElementById('locateBtn');
+                
+                if (isFollowingLocation) {
+                    isFollowingLocation = false;
+                    locateBtn.classList.remove('active');
+                    showNotification('Location following disabled');
+                } else {
+                    isFollowingLocation = true;
+                    locateBtn.classList.add('active');
+                    showNotification('Location following enabled');
+                    
+                    // Center map on current location
+                    map.flyTo([currentLocation.lat, currentLocation.lng], 15, {
+                        duration: 1.0,
+                        easeLinearity: 0.25
+                    });
+                }
+            }
+            
+            // Set travel mode
+            function setTravelMode(mode) {
+                currentTravelMode = mode;
+                
+                // Update travel mode cards
+                document.querySelectorAll('.travel-mode-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                document.querySelector(`.travel-mode-card[data-mode="${mode}"]`).classList.add('active');
+                
+                // If route is already calculated, recalculate with new mode
+                const endInput = document.getElementById('endInput');
+                if (routeMode && endInput.value) {
+                    const start = document.getElementById('startInput').value;
+                    const end = endInput.value;
+                    calculateRoute(start, end);
+                }
+            }
+            
+            // Clear route and reset UI
+            function clearRoute() {
+                document.getElementById('endInput').value = '';
+                document.getElementById('routeResult').style.display = 'none';
+                document.getElementById('distanceIndicator').classList.remove('show');
+                document.querySelector('.map-header').style.display = 'flex';
+                routeMode = false;
+                currentRouteData = null;
+                
+                // Remove route from map
+                if (routingControl) {
+                    map.removeControl(routingControl);
+                    routingControl = null;
+                }
+                
+                // Remove any custom route layers
+                if (routeLine) {
+                    map.removeLayer(routeLine);
+                    routeLine = null;
+                }
+                
+                // Remove destination marker
+                if (selectedLocationMarker) {
+                    map.removeLayer(selectedLocationMarker);
+                    selectedLocationMarker = null;
+                }
+            }
+            
+            // Initialize event listeners
+            function initEventListeners() {
+                // Locate button
+                document.getElementById('locateBtn').addEventListener('click', toggleLocationFollowing);
+                
+                // Map card
+                document.getElementById('mapCard').addEventListener('click', function() {
+                    changeMapLayer('streets');
+                });
+                
+                // Satellite card
+                document.getElementById('satelliteCard').addEventListener('click', function() {
+                    changeMapLayer('satellite');
+                });
+                
+                // Route card
+                document.getElementById('routeCard').addEventListener('click', function() {
+                    toggleBottomSheet(true);
+                    document.getElementById('routePanel').classList.add('active');
+                });
+                
+                // Profile button
+                document.getElementById('profileBtn').addEventListener('click', function() {
+                    toggleProfilePanel(true);
+                });
+                
+                // Close sheet button
+                document.getElementById('closeSheet').addEventListener('click', function() {
+                    toggleBottomSheet(false);
+                });
+                
+                // Close profile button
+                document.getElementById('profileClose').addEventListener('click', function() {
+                    toggleProfilePanel(false);
+                });
+                
+                // Get route button
+                document.getElementById('getRoute').addEventListener('click', function() {
+                    const start = document.getElementById('startInput').value;
+                    const end = document.getElementById('endInput').value;
+                    
+                    if (!end) {
+                        showNotification('Please enter a destination');
+                        return;
+                    }
+                    
+                    calculateRoute(start, end);
+                });
+                
+                // Clear route button
+                document.getElementById('clearRoute').addEventListener('click', clearRoute);
+                
+                // Close notification
+                document.getElementById('closeNotification').addEventListener('click', function() {
+                    document.getElementById('notification').classList.remove('show');
+                });
+                
+                // Search functionality
+                document.getElementById('searchBtn').addEventListener('click', function() {
+                    const query = document.getElementById('searchInput').value;
+                    if (query) {
+                        showSuggestions(document.getElementById('searchInput'), 'suggestions');
+                    }
+                });
+                
+                // Search input suggestions
+                document.getElementById('searchInput').addEventListener('input', function() {
+                    showSuggestions(this, 'suggestions');
+                });
+                
+                // Start input suggestions
+                document.getElementById('startInput').addEventListener('input', function() {
+                    showSuggestions(this, 'startSuggestions');
+                });
+                
+                // End input suggestions
+                document.getElementById('endInput').addEventListener('input', function() {
+                    showSuggestions(this, 'endSuggestions');
+                });
+                
+                // Close suggestions when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.search-container')) {
+                        document.getElementById('suggestions').style.display = 'none';
+                    }
+                    if (!e.target.closest('.input-group')) {
+                        document.getElementById('startSuggestions').style.display = 'none';
+                        document.getElementById('endSuggestions').style.display = 'none';
+                    }
+                });
+                
+                // Handle 360 view buttons in POI popups
+                document.addEventListener('click', function(e) {
+                    if (e.target.closest('.view-360-btn')) {
+                        const button = e.target.closest('.view-360-btn');
+                        const lat = parseFloat(button.dataset.lat);
+                        const lng = parseFloat(button.dataset.lng);
+                        const title = button.closest('.poi-popup').querySelector('.poi-popup-title').textContent;
+                        
+                        // Show 360 view (simulated)
+                        showNotification('360° view would open here with real implementation');
+                    }
+                    
+                    if (e.target.closest('.route-to-btn')) {
+                        const button = e.target.closest('.route-to-btn');
+                        const lat = parseFloat(button.dataset.lat);
+                        const lng = parseFloat(button.dataset.lng);
+                        const name = button.dataset.name;
+                        
+                        // Set destination and open route panel
+                        document.getElementById('endInput').value = name;
+                        toggleBottomSheet(true);
+                        document.getElementById('routePanel').classList.add('active');
+                    }
+                });
+                
+                // Login functionality
+                document.getElementById('loginBtn').addEventListener('click', function() {
+                    if (isLoggedIn) {
+                        logoutUser();
+                    } else {
+                        loginUser();
+                    }
+                });
+                
+                // Travel mode cards
+                document.querySelectorAll('.travel-mode-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        setTravelMode(this.dataset.mode);
+                    });
+                });
+            }
+            
+            // Initialize the application
+            initMap();
+            initEventListeners();
+            
+            // Set default travel mode
+            setTravelMode('driving-car');
+            
+            // Show welcome notification
+            setTimeout(() => {
+                showNotification('Welcome to M Maps! Search for any location to get started.');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
